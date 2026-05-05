@@ -16,10 +16,11 @@ const FormContainer = ({
   children: React.ReactNode;
 }) => {
   const [state, formAction] = useActionState(action, initialState);
+  console.log("state", state);
 
   useEffect(() => {
     if (state.message) {
-      toast.success(state.message, { duration: 1000 });
+      toast.success(state.message, { duration: 5000, position: "top-center" });
     }
   }, [state]);
 

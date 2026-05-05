@@ -1,5 +1,6 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import useFormState from "@/hooks/useFormState";
 
 type FormInputProps = {
   name: string;
@@ -11,6 +12,7 @@ type FormInputProps = {
 
 const FormInput = (props: FormInputProps) => {
   const { name, type, label, defaultValue, placeholder } = props;
+
   return (
     <div className="mb-2">
       <Label htmlFor={name}>{label}</Label>
