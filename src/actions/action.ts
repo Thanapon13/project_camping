@@ -28,11 +28,12 @@ const renderError = (
 };
 
 export const createProfileAction = async (
-  preState: any,
+  prevState: any,
   formData: FormData,
 ) => {
   try {
-    const user = await getAuthUser();
+    const user = await currentUser();
+    if (!user) throw new Error("Please Login!!!");
 
     const rawData = Object.fromEntries(
       Array.from(formData.entries()).filter(([key]) => !key.startsWith("$")),
@@ -49,6 +50,7 @@ export const createProfileAction = async (
         ...validatedField,
       },
     });
+
     const client = await clerkClient();
 
     await client.users.updateUserMetadata(user.id, {
@@ -62,4 +64,27 @@ export const createProfileAction = async (
     return renderError(error, 402);
   }
   redirect("/");
+};
+
+export const createLandmarkAction = async (
+  prevState: any,
+  formData: FormData,
+): Promise<{ message: string }> => {
+  try {
+    const user = await getAuthUser();
+    console.log("user:", user.id);
+
+    const rawData = Object.fromEntries(
+      Array.from(formData.entries()).filter(([key]) => !key.startsWith("$")),
+    );
+    console.log("rawData:", rawData);
+
+    // await db.landmark.create({
+    //   data: {},
+    // });
+
+    return { message: "create Landmark Success!!!" };
+  } catch (error) {
+    return renderError(error, 402);
+  }
 };
