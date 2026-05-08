@@ -1,9 +1,12 @@
 import { createLandmarkAction } from "@/actions/action";
 import { SubmitButton } from "@/components/form/Buttons";
-import CategoryInput from "@/components/form/CategoryInput";
 import FormContainer from "@/components/form/FormContainer";
 import FormInput from "@/components/form/FormInput";
+import SelectField from "@/components/form/SelectField";
 import TextAreaInput from "@/components/form/TextAreaInput";
+import MapLandmark from "@/components/map/MapLandmark";
+import { categories } from "@/utils/category";
+import { provinces } from "@/utils/provinces";
 
 const CreateCamp = async () => {
   return (
@@ -14,7 +17,7 @@ const CreateCamp = async () => {
 
       <div className="border p-8 rounded-md">
         <FormContainer action={createLandmarkAction}>
-          <div className="grid md:grid-cols-2 gap-4 mt-4">
+          <div className="grid md:grid-cols-3 gap-4 mt-4">
             <FormInput
               name="name"
               type="text"
@@ -22,7 +25,8 @@ const CreateCamp = async () => {
               placeholder="Landmark Name"
             />
 
-            <CategoryInput />
+            {/* Category Input */}
+            <SelectField name="category" data={categories} />
           </div>
 
           <TextAreaInput name="description" />
@@ -34,7 +38,12 @@ const CreateCamp = async () => {
               label="Price"
               placeholder="Price"
             />
+
+            {/* Province Input */}
+            <SelectField name="province" data={provinces} />
           </div>
+
+          <MapLandmark />
 
           <SubmitButton text="create Landmark" size="sm" className="mt-10" />
         </FormContainer>

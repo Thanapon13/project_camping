@@ -1,5 +1,12 @@
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+
 const CampPage = () => {
-  return <div>CampPage</div>;
+  return (
+    <Link href="/camp/create">
+      <Button type="button">Post</Button>
+    </Link>
+  );
 };
 
 export default CampPage;

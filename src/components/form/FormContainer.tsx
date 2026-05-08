@@ -16,7 +16,6 @@ const FormContainer = ({
   children: React.ReactNode;
 }) => {
   const [state, formAction] = useActionState(action, initialState);
-  console.log("state", state);
 
   useEffect(() => {
     if (state.message) {

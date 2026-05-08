@@ -6,11 +6,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { categories } from "@/utils/category";
+import { SelectOption } from "@/utils/types";
 
-const CategoryInput = ({ defaultValue }: { defaultValue?: string }) => {
-  const name = "category";
-
+const SelectField = ({
+  defaultValue,
+  name,
+  data,
+}: {
+  defaultValue?: string;
+  name: string;
+  data: SelectOption[];
+}) => {
   return (
     <div>
       <Label htmlFor={name} className="capitalize">
@@ -19,24 +25,26 @@ const CategoryInput = ({ defaultValue }: { defaultValue?: string }) => {
 
       <Select
         name={name}
-        defaultValue={defaultValue || categories[0].label}
+        defaultValue={defaultValue || data[0].label || data[0].PROVINCE_NAME}
         required
       >
-        <SelectTrigger className="w-full max-w-48 h-8">
+        <SelectTrigger className="w-full h-8">
           <SelectValue />
         </SelectTrigger>
 
         <SelectContent>
-          {categories?.map((el, idx) => {
+          {data?.map((el, idx) => {
+            const value = el.label || el.PROVINCE_NAME || "";
+            const Icon = el.icon;
             return (
               <SelectItem
                 key={idx}
-                value={el?.label}
+                value={value}
                 className="cursor-pointer text-sm"
               >
                 <span className="capitalize flex items-center gap-4">
-                  <el.icon className="h-5 w-5" />
-                  {el?.label}
+                  {Icon && <Icon className="h-5 w-5" />}
+                  {value}
                 </span>
               </SelectItem>
             );
@@ -47,4 +55,4 @@ const CategoryInput = ({ defaultValue }: { defaultValue?: string }) => {
   );
 };
 
-export default CategoryInput;
+export default SelectField;
