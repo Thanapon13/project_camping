@@ -6,7 +6,7 @@ import Search from "./Search";
 const Navbar = () => {
   return (
     <nav>
-      <div className="container flex justify-between flex-wrap">
+      <div className="container flex justify-between flex-wrap py-8">
         {/* Logo */}
         <Logo />
 

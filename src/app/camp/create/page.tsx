@@ -2,6 +2,7 @@ import { createLandmarkAction } from "@/actions/action";
 import { SubmitButton } from "@/components/form/Buttons";
 import FormContainer from "@/components/form/FormContainer";
 import FormInput from "@/components/form/FormInput";
+import ImageInput from "@/components/form/ImageInput";
 import SelectField from "@/components/form/SelectField";
 import TextAreaInput from "@/components/form/TextAreaInput";
 import MapLandmark from "@/components/map/MapLandmark";
@@ -43,7 +44,9 @@ const CreateCamp = async () => {
             <SelectField name="province" data={provinces} />
           </div>
 
-          <MapLandmark />
+          <ImageInput />
+
+          <MapLandmark location={{ lat: 14, lng: 101 }} />
 
           <SubmitButton text="create Landmark" size="sm" className="mt-10" />
         </FormContainer>
