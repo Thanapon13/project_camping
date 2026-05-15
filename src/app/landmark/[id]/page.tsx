@@ -6,11 +6,12 @@ import LandmarkDescription from "@/components/landmark/LandmarkDescription";
 import LandmarkDetails from "@/components/landmark/LandmarkDetails";
 import MapLandmark from "@/components/landmark/MapLandmark";
 import { fetchLandmarkDetail } from "@/actions/action";
+import ScrollToTop from "@/components/landmark/ScrollToTop";
+import MapLandmarkClient from "@/components/map/MapLandmarkClient";
 
 const LandmarkDetailPage = async ({ params }: { params: { id: string } }) => {
   const { id } = await params;
   const landmark = await fetchLandmarkDetail({ id });
-  console.log("landmark", landmark);
 
   if (!landmark) redirect("/");
 
@@ -20,6 +21,8 @@ const LandmarkDetailPage = async ({ params }: { params: { id: string } }) => {
 
   return (
     <section className="container mt-4">
+      <ScrollToTop />
+
       {/* 1. Header: Name & Action Buttons */}
       <Breadcrumbs name={name} />
       <header className="flex justify-between items-center mt-4">
@@ -73,7 +76,9 @@ const LandmarkDetailPage = async ({ params }: { params: { id: string } }) => {
       </section>
 
       {/* 5. Map Section */}
-      <MapLandmark location={{ lat, lng }} />
+      <div className="mb-10">
+        <MapLandmarkClient location={{ lat, lng }} />
+      </div>
     </section>
   );
 };

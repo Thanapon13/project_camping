@@ -10,6 +10,7 @@ const ImageInput = () => {
   const name = "image";
   const inputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  console.log("preview", preview);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

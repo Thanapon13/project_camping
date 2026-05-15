@@ -62,7 +62,7 @@ const LandmarkCard = ({ landmark }: { landmark: LandmarkCardProps }) => {
           <LandmarkRating />
         </div>
 
-        <CardDescription className="text-sm leading-relaxed min-h-[40px] wrap-break-word">
+        <CardDescription className="text-sm leading-relaxed h-[50px] wrap-break-word">
           {truncatedDescription}
         </CardDescription>
       </CardContent>

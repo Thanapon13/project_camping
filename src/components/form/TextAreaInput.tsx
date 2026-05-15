@@ -5,10 +5,14 @@ const TextAreaInput = ({
   name,
   labelText,
   defaultValue,
+  value,
+  onChange,
 }: {
   name: string;
   labelText?: string;
   defaultValue?: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }) => {
   return (
     <div className="mb-2">
@@ -20,6 +24,8 @@ const TextAreaInput = ({
         id={name}
         name={name}
         defaultValue={defaultValue}
+        value={value}
+        onChange={onChange}
         rows={5}
         required
       />

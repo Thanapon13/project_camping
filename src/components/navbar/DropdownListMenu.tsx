@@ -42,7 +42,7 @@ const DropdownListMenu = () => {
         {/* Log In : ให้แสดง*/}
         <Show when="signed-in">
           {links.map((el, idx) => (
-            <DropdownMenuItem key={idx}>
+            <DropdownMenuItem key={idx} asChild className="cursor-pointer">
               <Link href={el?.href}>{el?.label}</Link>
             </DropdownMenuItem>
           ))}

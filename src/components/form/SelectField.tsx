@@ -12,10 +12,12 @@ const SelectField = ({
   defaultValue,
   name,
   data,
+  onValueChange,
 }: {
   defaultValue?: string;
   name: string;
   data: SelectOption[];
+  onValueChange?: (value: string) => void;
 }) => {
   return (
     <div>
@@ -27,6 +29,7 @@ const SelectField = ({
         name={name}
         defaultValue={defaultValue || data[0].label || data[0].PROVINCE_NAME}
         required
+        onValueChange={onValueChange}
       >
         <SelectTrigger className="w-full h-8">
           <SelectValue />
