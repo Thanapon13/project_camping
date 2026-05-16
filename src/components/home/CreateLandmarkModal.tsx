@@ -14,8 +14,6 @@ import CreateLandmarkForm from "../landmark/CreateLandmarkForm";
 
 const CreateLandmarkModal = () => {
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState(false);
-  console.log("selected", selected);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

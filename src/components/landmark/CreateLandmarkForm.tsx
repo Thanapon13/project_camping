@@ -10,7 +10,7 @@ import ImageInput from "../form/ImageInput";
 import MapLandmarkClient from "../map/MapLandmarkClient";
 import { createLandmarkAction } from "@/actions/action";
 import { SubmitButton } from "../form/Buttons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface CreateLandmarkFormProps {
   onSuccess?: () => void;
