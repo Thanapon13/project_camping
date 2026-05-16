@@ -15,7 +15,6 @@ import { useState } from "react";
 const defaultFormData = {
   name: "",
   description: "",
-  image: [],
   category: "",
   province: "",
   price: "",
@@ -25,10 +24,9 @@ const defaultFormData = {
 
 const CreateLandmarkForm = () => {
   const [formData, setFormData] = useState(defaultFormData);
-  console.log("formData:", formData);
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
-  const { name, category, description, image, lng, lat, price, province } =
-    formData;
+  const { name, category, description, price, province } = formData;
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -41,8 +39,18 @@ const CreateLandmarkForm = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleFormAction = async (
+    prevState: any,
+    formDataPayload: FormData,
+  ) => {
+    if (imageFile) {
+      formDataPayload.set("image", imageFile);
+    }
+    return createLandmarkAction(prevState, formDataPayload);
+  };
+
   return (
-    <FormContainer action={createLandmarkAction}>
+    <FormContainer action={handleFormAction}>
       <div className="grid md:grid-cols-3 gap-4 mt-4">
         <FormInput
           name="name"
@@ -83,7 +91,7 @@ const CreateLandmarkForm = () => {
         />
       </div>
 
-      <ImageInput />
+      <ImageInput file={imageFile} onChange={setImageFile} />
 
       <MapLandmarkClient location={{ lat: 14, lng: 101 }} />
 

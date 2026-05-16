@@ -13,4 +13,5 @@ const CreateCamp = async () => {
     </section>
   );
 };
+
 export default CreateCamp;

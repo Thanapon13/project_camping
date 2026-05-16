@@ -3,7 +3,7 @@
 import { actionFunction } from "@/utils/types";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 
 const initialState = {
@@ -38,7 +38,7 @@ const FormContainer = ({
         padding: "3em",
         timerProgressBar: true,
       }).then(() => {
-        redirect("/");
+        router.push("/");
       });
     }
     if (state.code === 402) {
