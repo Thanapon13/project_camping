@@ -66,29 +66,18 @@ export const validateWithZod = <T>(schema: z.ZodType<T>, data: unknown): T => {
   const result = schema.safeParse(data);
 
   if (!result.success) {
-    const errors = result.error.issues.map(error => error.message);
-    console.log("errors:", errors);
+    const fieldErrors: Record<string, string> = {};
+    result.error.issues.forEach(issue => {
+      const path = issue.path[0] as string;
+      if (!fieldErrors[path]) {
+        fieldErrors[path] = issue.message;
+      }
+    });
 
-    throw new Error(errors.join(", "));
+    const errorInstance = new Error("Validation Failed");
+    (errorInstance as any).errors = fieldErrors;
+    throw errorInstance;
   }
 
   return result.data;
 };
-
-// export const validateWithZod = <T>(schema: z.ZodType<T>, data: unknown) => {
-//   const result = schema.safeParse(data);
-
-//   if (!result.success) {
-//     // สร้าง object { fieldName: "error message" }
-//     const errors: Record<string, string> = {};
-//     result.error.issues.forEach(issue => {
-//       const path = issue.path[0] as string;
-//       if (!errors[path]) {
-//         errors[path] = issue.message;
-//       }
-//     });
-//     return { success: false, errors };
-//   }
-
-//   return { success: true, data: result.data };
-// };

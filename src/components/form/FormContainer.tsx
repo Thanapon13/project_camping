@@ -3,7 +3,6 @@
 import { actionFunction } from "@/utils/types";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 
 const initialState = {
@@ -15,14 +14,15 @@ const FormContainer = ({
   className,
   action,
   children,
+  onSuccess,
 }: {
   className?: string;
   action: actionFunction;
   children: React.ReactNode;
+  onSuccess?: () => void;
 }) => {
   const [state, formAction] = useActionState(action, initialState);
-
-  const router = useRouter();
+  console.log("state", state);
 
   useEffect(() => {
     if (!state.message) return;
@@ -37,14 +37,16 @@ const FormContainer = ({
         width: "600px",
         padding: "3em",
         timerProgressBar: true,
-      }).then(() => {
-        router.push("/");
       });
+
+      if (onSuccess) {
+        onSuccess();
+      }
     }
     if (state.code === 402) {
       toast.error(state.message, { duration: 5000, position: "top-center" });
     }
-  }, [state, router]);
+  }, [state, onSuccess]);
 
   return (
     <form action={formAction} className={className}>

@@ -10,7 +10,11 @@ import ImageInput from "../form/ImageInput";
 import MapLandmarkClient from "../map/MapLandmarkClient";
 import { createLandmarkAction } from "@/actions/action";
 import { SubmitButton } from "../form/Buttons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+interface CreateLandmarkFormProps {
+  onSuccess?: () => void;
+}
 
 const defaultFormData = {
   name: "",
@@ -22,11 +26,11 @@ const defaultFormData = {
   lng: "",
 };
 
-const CreateLandmarkForm = () => {
+const CreateLandmarkForm = ({ onSuccess }: CreateLandmarkFormProps) => {
   const [formData, setFormData] = useState(defaultFormData);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
-  const { name, category, description, price, province } = formData;
+  const { name, description, price } = formData;
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -50,7 +54,7 @@ const CreateLandmarkForm = () => {
   };
 
   return (
-    <FormContainer action={handleFormAction}>
+    <FormContainer action={handleFormAction} onSuccess={onSuccess}>
       <div className="grid md:grid-cols-3 gap-4 mt-4">
         <FormInput
           name="name"

@@ -24,10 +24,28 @@ const getAuthUser = async () => {
   return user;
 };
 
+// const renderError = (
+//   error: unknown,
+//   code: number,
+// ): { message: string; code: number } => {
+//   return {
+//     message: error instanceof Error ? error.message : "An Error!!!",
+//     code: code,
+//   };
+// };
+
 const renderError = (
   error: unknown,
   code: number,
-): { message: string; code: number } => {
+): { message: string; code: number; errors?: Record<string, string> } => {
+  if (error instanceof Error && "errors" in error) {
+    return {
+      message: "กรุณากรอกข้อมูลให้ถูกต้องตามเงื่อนไข",
+      code: code,
+      errors: (error as any).errors,
+    };
+  }
+
   return {
     message: error instanceof Error ? error.message : "An Error!!!",
     code: code,
@@ -93,13 +111,8 @@ export const createLandmarkAction = async (
     const file = formData.get("image") as File;
 
     // Step1 : Validate rawData
-    const validatedFile = validateWithZod(imageSchema, {
-      image: file,
-    });
-    console.log("validatedFile", validatedFile);
-
+    const validatedFile = validateWithZod(imageSchema, { image: file });
     const validatedField = validateWithZod(landmarkSchema, rawData);
-    console.log("validatedField", validatedField);
 
     // Step2 : Upload  Image to Supabase
     const fullPath = await uploadFile(validatedFile.image);
@@ -113,6 +126,7 @@ export const createLandmarkAction = async (
       },
     });
 
+    revalidatePath("/");
     return { code: 0, message: "create Landmark Success!!!" };
   } catch (error) {
     return renderError(error, 402);
