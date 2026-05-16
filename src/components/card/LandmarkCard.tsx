@@ -68,6 +68,10 @@ const LandmarkCard = ({ landmark }: { landmark: LandmarkCardProps }) => {
       </CardContent>
 
       <CardFooter className="p-4 pt-0">
+        <Button className="w-full">Edit</Button>
+      </CardFooter>
+
+      <CardFooter className="p-4 pt-0">
         <Button asChild className="w-full">
           <Link href={`/landmark/${id}`}>View details</Link>
         </Button>
