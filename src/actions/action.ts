@@ -24,16 +24,6 @@ const getAuthUser = async () => {
   return user;
 };
 
-// const renderError = (
-//   error: unknown,
-//   code: number,
-// ): { message: string; code: number } => {
-//   return {
-//     message: error instanceof Error ? error.message : "An Error!!!",
-//     code: code,
-//   };
-// };
-
 const renderError = (
   error: unknown,
   code: number,
@@ -133,10 +123,53 @@ export const createLandmarkAction = async (
   }
 };
 
+export const editLandmarkAction = async (
+  prevState: any,
+  formData: FormData,
+): Promise<{
+  message: string;
+  errors?: Record<string, string>;
+  code?: number;
+}> => {
+  try {
+    const user = await getAuthUser();
+    const id = formData.get("id") as string;
+
+    const rawData = Object.fromEntries(
+      Array.from(formData.entries()).filter(
+        ([key]) => !key.startsWith("$") && key !== "id" && key !== "image",
+      ),
+    );
+
+    const validatedField = validateWithZod(landmarkSchema, rawData);
+
+    const file = formData.get("image") as File;
+
+    let imagePath: string | undefined;
+    if (file && file.size > 0) {
+      const validatedFile = validateWithZod(imageSchema, { image: file });
+      imagePath = await uploadFile(validatedFile.image);
+    }
+
+    await db.landmark.update({
+      where: { id, profileId: user.id },
+      data: {
+        ...validatedField,
+        ...(imagePath && { image: imagePath }),
+      },
+    });
+
+    revalidatePath("/");
+    return { code: 0, message: "Update Landmark Success!!!" };
+  } catch (error) {
+    return renderError(error, 402);
+  }
+};
+
 export const fetchLandmarks = async () => {
   const data = await db.landmark.findMany({
     orderBy: {
-      createdAt: "desc",
+      updatedAt: "desc",
     },
   });
 

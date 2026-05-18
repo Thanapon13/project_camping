@@ -22,7 +22,6 @@ const FormContainer = ({
   onSuccess?: () => void;
 }) => {
   const [state, formAction] = useActionState(action, initialState);
-  console.log("state", state);
 
   useEffect(() => {
     if (!state.message) return;

@@ -8,12 +8,14 @@ import SelectField from "../form/SelectField";
 import TextAreaInput from "../form/TextAreaInput";
 import ImageInput from "../form/ImageInput";
 import MapLandmarkClient from "../map/MapLandmarkClient";
-import { createLandmarkAction } from "@/actions/action";
-import { SubmitButton } from "../form/Buttons";
+import { createLandmarkAction, editLandmarkAction } from "@/actions/action";
+import { SubmitButton } from "../buttons/Buttons";
 import { useState } from "react";
+import { LandmarkCardProps } from "@/utils/types";
 
 interface CreateLandmarkFormProps {
   onSuccess?: () => void;
+  value?: LandmarkCardProps;
 }
 
 const defaultFormData = {
@@ -26,11 +28,20 @@ const defaultFormData = {
   lng: "",
 };
 
-const CreateLandmarkForm = ({ onSuccess }: CreateLandmarkFormProps) => {
-  const [formData, setFormData] = useState(defaultFormData);
+const CreateLandmarkForm = ({ onSuccess, value }: CreateLandmarkFormProps) => {
+  const [formData, setFormData] = useState({
+    name: value?.name ?? "",
+    description: value?.description ?? "",
+    category: value?.category ?? "",
+    province: value?.province ?? "",
+    price: value?.price?.toString() ?? "",
+    lat: value?.lat?.toString() ?? "",
+    lng: value?.lng?.toString() ?? "",
+  });
+
   const [imageFile, setImageFile] = useState<File | null>(null);
 
-  const { name, description, price } = formData;
+  const { name, description, price, lat, lng } = formData;
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -50,8 +61,16 @@ const CreateLandmarkForm = ({ onSuccess }: CreateLandmarkFormProps) => {
     if (imageFile) {
       formDataPayload.set("image", imageFile);
     }
-    return createLandmarkAction(prevState, formDataPayload);
+
+    if (!value?.id) {
+      return createLandmarkAction(prevState, formDataPayload);
+    } else {
+      formDataPayload.set("id", value.id);
+      return editLandmarkAction(prevState, formDataPayload);
+    }
   };
+
+  const isEdit = !!value;
 
   return (
     <FormContainer action={handleFormAction} onSuccess={onSuccess}>
@@ -68,6 +87,7 @@ const CreateLandmarkForm = ({ onSuccess }: CreateLandmarkFormProps) => {
         <SelectField
           name="category"
           data={categories}
+          defaultValue={formData.category}
           onValueChange={handleSelectChange("category")}
         />
       </div>
@@ -91,15 +111,25 @@ const CreateLandmarkForm = ({ onSuccess }: CreateLandmarkFormProps) => {
         <SelectField
           name="province"
           data={provinces}
+          defaultValue={formData.province}
           onValueChange={handleSelectChange("province")}
         />
       </div>
 
       <ImageInput file={imageFile} onChange={setImageFile} />
 
-      <MapLandmarkClient location={{ lat: 14, lng: 101 }} />
+      <MapLandmarkClient
+        location={{
+          lat: parseFloat(lat) || 14,
+          lng: parseFloat(lng) || 101,
+        }}
+      />
 
-      <SubmitButton text="create Landmark" size="sm" className="mt-10" />
+      <SubmitButton
+        text={isEdit ? "Update Landmark" : "Create Landmark"}
+        size="sm"
+        className="mt-10"
+      />
     </FormContainer>
   );
 };

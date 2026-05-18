@@ -2,7 +2,7 @@
 
 import { useFormStatus } from "react-dom";
 import { Button } from "../ui/button";
-import { Heart, RotateCw } from "lucide-react";
+import { Heart, Pencil, RotateCw } from "lucide-react";
 import { SignInButton } from "@clerk/nextjs";
 
 type btnSize = "default" | "lg" | "sm";

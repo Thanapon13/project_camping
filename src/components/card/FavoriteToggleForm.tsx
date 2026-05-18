@@ -1,7 +1,7 @@
 "use client";
 
 import { toggleFavoriteAction } from "@/actions/action";
-import { FavoriteButton } from "../form/Buttons";
+import { FavoriteButton } from "../buttons/Buttons";
 import FormContainer from "../form/FormContainer";
 import { usePathname } from "next/navigation";
 

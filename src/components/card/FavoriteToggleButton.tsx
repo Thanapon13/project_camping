@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import FavoriteToggleForm from "./FavoriteToggleForm";
-import { SignInCardButton } from "../form/Buttons";
+import { SignInCardButton } from "../buttons/Buttons";
 import { fetchFavoriteId } from "@/actions/action";
 
 const FavoriteToggleButton = async ({ landmarkId }: { landmarkId: string }) => {
