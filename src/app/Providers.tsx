@@ -1,3 +1,4 @@
+import LandmarkContextProvider from "@/contexts/LandmarkContext";
 import { ThemeProvider } from "./theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -10,7 +11,7 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
         enableSystem
         disableTransitionOnChange
       >
-        {children}
+        <LandmarkContextProvider>{children}</LandmarkContextProvider>
         <Toaster />
       </ThemeProvider>
     </>

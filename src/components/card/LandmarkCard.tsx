@@ -14,8 +14,7 @@ import LandmarkRating from "./LandmarkRating";
 import LandmarkCardActions from "./LandmarkCardActions";
 
 const LandmarkCard = ({ landmark }: { landmark: LandmarkCardProps }) => {
-  const { name, image, id, description, price, province, category, lat, lng } =
-    landmark;
+  const { name, image, id, description, price, province, category } = landmark;
 
   const truncatedDescription =
     description.length > 40
@@ -70,8 +69,6 @@ const LandmarkCard = ({ landmark }: { landmark: LandmarkCardProps }) => {
       </CardContent>
 
       <CardFooter className="p-4 pt-0 flex flex-col">
-        <LandmarkCardActions landmark={landmark} />
-
         <Button asChild className="w-full">
           <Link href={`/landmark/${id}`}>View details</Link>
         </Button>
