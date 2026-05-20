@@ -15,13 +15,11 @@ const FormContainer = ({
   action,
   children,
   onSuccess,
-  silent = false,
 }: {
   className?: string;
   action: actionFunction;
   children: React.ReactNode;
   onSuccess?: () => void;
-  silent?: boolean;
 }) => {
   const [state, formAction] = useActionState(action, initialState);
   const onSuccessRef = useRef(onSuccess);
@@ -34,27 +32,24 @@ const FormContainer = ({
     if (!state.message) return;
 
     if (state.code === 0) {
-      // ✅ ถ้าไม่ silent ถึงจะแสดง Swal
-      if (!silent) {
-        Swal.fire({
-          title: "สำเร็จ!",
-          text: state.message,
-          icon: "success",
-          timer: 2000,
-          showConfirmButton: false,
-          width: "600px",
-          padding: "3em",
-          timerProgressBar: true,
-        });
-      }
-
-      onSuccessRef.current?.();
-    }
+      Swal.fire({
+        title: "สำเร็จ!",
+        text: state.message,
+        icon: "success",
+        timer: 2000,
+        showConfirmButton: false,
+        width: "600px",
+        padding: "3em",
+        timerProgressBar: true,
+      }).then(() => {
+        onSuccessRef.current?.();
+      });
+    } else if (state.code === 200) onSuccessRef.current?.();
 
     if (state.code === 402) {
       toast.error(state.message, { duration: 5000, position: "top-center" });
     }
-  }, [state, silent]);
+  }, [state]);
 
   return (
     <form action={formAction} className={className}>

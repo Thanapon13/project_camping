@@ -22,4 +22,7 @@ export type LandmarkCardProps = {
   price: number;
   lat: number;
   lng: number;
+  profileId: string;
 };
+
+export type FromPageType = "home" | "favorites";

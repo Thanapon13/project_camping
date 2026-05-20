@@ -1,66 +1,67 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
-import { fetchLandmarks, fetchFavoriteId } from "@/actions/action";
+import { fetchLandmarks } from "@/actions/action";
 import LandmarkCard from "../card/LandmarkCard";
-import { Loader2 } from "lucide-react";
+import LoadingCard from "../card/LoadingCard";
+import { FromPageType } from "@/utils/types";
 
 type LandmarkWithFav = any;
 
 const Landmarklist = ({
   initialLandmarks,
   userId,
+  fromPage = "home",
 }: {
   initialLandmarks: LandmarkWithFav[];
   userId: string | null;
+  fromPage?: FromPageType;
 }) => {
   const [landmarks, setLandmarks] =
     useState<LandmarkWithFav[]>(initialLandmarks);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(initialLandmarks.length === 8);
   const [isLoading, setIsLoading] = useState(false);
+  const isLoadingRef = useRef(false);
 
   const { ref, inView } = useInView({ threshold: 0 });
 
   useEffect(() => {
-    if (inView && hasMore && !isLoading) {
-      const loadMoreLandmarks = async () => {
-        setIsLoading(true);
-        const nextPage = page + 1;
+    if (!inView || !hasMore || isLoadingRef.current) return;
 
-        try {
-          const newLandmarks = await fetchLandmarks({
-            page: nextPage,
-            limit: 8,
-          });
+    const loadMore = async () => {
+      isLoadingRef.current = true;
+      setIsLoading(true);
+      const nextPage = page + 1;
 
-          // ตรวจสอบ favoriteId ของหน้าใหม่แบบ Client-side call ไปที่ Server Action
-          const newLandmarksWithFav = await Promise.all(
-            newLandmarks.map(async landmark => {
-              const favoriteId = userId
-                ? await fetchFavoriteId({ landmarkId: landmark.id })
-                : null;
-              return { ...landmark, favoriteId };
-            }),
-          );
+      try {
+        const newLandmarksWithFav = await fetchLandmarks({
+          page: nextPage,
+          limit: 8,
+          userId,
+        });
 
-          if (newLandmarks.length < 8) {
-            setHasMore(false);
-          }
+        if (newLandmarksWithFav.length < 8) setHasMore(false);
 
-          setLandmarks(prev => [...prev, ...newLandmarksWithFav]);
-          setPage(nextPage);
-        } catch (error) {
-          console.error("Error loading more landmarks:", error);
-        } finally {
-          setIsLoading(false);
-        }
-      };
+        setLandmarks(prev => [...prev, ...newLandmarksWithFav]);
+        setPage(nextPage);
+      } catch (error) {
+        console.error("Error loading more landmarks:", error);
+      } finally {
+        isLoadingRef.current = false;
+        setIsLoading(false);
+      }
+    };
 
-      loadMoreLandmarks();
-    }
-  }, [inView, hasMore, isLoading, page, userId]);
+    loadMore();
+  }, [inView, hasMore, page, userId]);
+
+  useEffect(() => {
+    setLandmarks(initialLandmarks);
+    setPage(1);
+    setHasMore(initialLandmarks.length === 8);
+  }, [initialLandmarks]);
 
   return (
     <section>
@@ -71,15 +72,14 @@ const Landmarklist = ({
             landmark={landmark}
             userId={userId}
             favoriteId={landmark.favoriteId}
+            fromPage={fromPage}
           />
         ))}
       </div>
 
       {hasMore && (
-        <div ref={ref} className="flex justify-center items-center p-6 mt-4">
-          {isLoading && (
-            <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
-          )}
+        <div ref={ref} className="mt-4">
+          {isLoading && <LoadingCard />}
         </div>
       )}
     </section>

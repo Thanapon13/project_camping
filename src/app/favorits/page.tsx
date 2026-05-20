@@ -1,12 +1,18 @@
 import { fetchFavorits } from "@/actions/action";
 import Landmarklist from "@/components/home/Landmarklist";
+import { auth } from "@clerk/nextjs/server";
 
 const FavoritsPage = async () => {
-  const data = await fetchFavorits();
+  const { userId } = await auth();
+  const initialLandmarks = await fetchFavorits();
 
   return (
     <div className="mb-10">
-      <Landmarklist landmarks={data} />
+      <Landmarklist
+        initialLandmarks={initialLandmarks}
+        userId={userId}
+        fromPage="favorites"
+      />
     </div>
   );
 };

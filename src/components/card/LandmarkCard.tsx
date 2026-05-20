@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { LandmarkCardProps } from "@/utils/types";
+import { FromPageType, LandmarkCardProps } from "@/utils/types";
 import LandmarkRating from "./LandmarkRating";
 import LandmarkCardActions from "./LandmarkCardActions";
 import FavoriteToggleButton from "./FavoriteToggleButton";
@@ -17,12 +17,15 @@ const LandmarkCard = ({
   landmark,
   userId,
   favoriteId,
+  fromPage,
 }: {
   landmark: LandmarkCardProps;
   userId: string | null;
   favoriteId: string | null;
+  fromPage?: FromPageType;
 }) => {
-  const { name, image, id, description, price, province, category } = landmark;
+  const { name, image, id, description, price, province, category, profileId } =
+    landmark;
 
   const truncatedDescription =
     description.length > 40
@@ -50,7 +53,7 @@ const LandmarkCard = ({
           userId={userId}
         />
 
-        <LandmarkCardActions landmark={landmark} />
+        {userId === profileId && <LandmarkCardActions landmark={landmark} />}
       </div>
 
       <CardContent className="p-4">
@@ -78,7 +81,7 @@ const LandmarkCard = ({
 
       <CardFooter className="p-4 pt-0 flex flex-col">
         <Button asChild className="w-full">
-          <Link href={`/landmark/${id}`}>View details</Link>
+          <Link href={`/landmark/${id}?from=${fromPage}`}>View details</Link>
         </Button>
       </CardFooter>
     </Card>

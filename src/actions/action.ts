@@ -169,18 +169,35 @@ export const editLandmarkAction = async (
 export const fetchLandmarks = async ({
   page = 1,
   limit = 8,
-}: { page?: number; limit?: number } = {}) => {
+  userId = null,
+}: { page?: number; limit?: number; userId?: string | null } = {}) => {
   const skip = (page - 1) * limit;
 
-  const data = await db.landmark.findMany({
-    skip: skip,
+  const landmarks = await db.landmark.findMany({
+    skip,
     take: limit,
-    orderBy: {
-      updatedAt: "desc",
-    },
+    orderBy: { updatedAt: "desc" },
   });
 
-  return data;
+  if (!userId) {
+    return landmarks.map(l => ({ ...l, favoriteId: null }));
+  }
+
+  // login แล้ว → ดึง favorites ทั้งหมดใน 1 query
+  const favorites = await db.favorite.findMany({
+    where: {
+      profileId: userId,
+      landmarkId: { in: landmarks.map(l => l.id) },
+    },
+    select: { id: true, landmarkId: true },
+  });
+
+  const favoriteMap = new Map(favorites.map(f => [f.landmarkId, f.id]));
+
+  return landmarks.map(l => ({
+    ...l,
+    favoriteId: favoriteMap.get(l.id) ?? null,
+  }));
 };
 
 export const toggleFavoriteAction = async (prevState: {
@@ -206,7 +223,7 @@ export const toggleFavoriteAction = async (prevState: {
     revalidatePath(pathname);
 
     return {
-      code: 0,
+      code: 200,
       message: isValidId ? "Removed Favorite Success" : "Add Favorite Success",
     };
   } catch (error) {
@@ -239,10 +256,9 @@ export const fetchFavorits = async () => {
   const user = await getAuthUser();
 
   const favorites = await db.favorite.findMany({
-    where: {
-      profileId: user.id,
-    },
+    where: { profileId: user.id },
     select: {
+      id: true,
       landmark: {
         select: {
           id: true,
@@ -254,12 +270,16 @@ export const fetchFavorits = async () => {
           lat: true,
           lng: true,
           category: true,
+          profileId: true,
         },
       },
     },
   });
 
-  return favorites.map(favorite => favorite.landmark);
+  return favorites.map(f => ({
+    ...f.landmark,
+    favoriteId: f.id,
+  }));
 };
 
 export const fetchLandmarkDetail = async ({ id }: { id: string }) => {

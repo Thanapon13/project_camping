@@ -15,7 +15,7 @@ const FavoriteToggleForm = ({
   landmarkId: string;
 }) => {
   const pathname = usePathname();
-  // ✅ แยก state ออกเป็น 2 ตัว: favoriteId จริง และ UI state
+  // แยก state ออกเป็น 2 ตัว: favoriteId จริง และ UI state
   const [favoriteId, setFavoriteId] = useState<string | null>(
     initialFavoriteId,
   );
@@ -39,9 +39,8 @@ const FavoriteToggleForm = ({
       action={toggleAction}
       className="absolute top-2.5 right-2.5"
       onSuccess={handleSuccess}
-      silent
     >
-      <FavoriteButton isFavorite={isFavorite} /> {/* ✅ ใช้ isFavorite แทน */}
+      <FavoriteButton isFavorite={isFavorite} />
     </FormContainer>
   );
 };

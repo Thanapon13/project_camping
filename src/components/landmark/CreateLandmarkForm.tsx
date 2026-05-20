@@ -18,16 +18,6 @@ interface CreateLandmarkFormProps {
   value?: LandmarkCardProps;
 }
 
-const defaultFormData = {
-  name: "",
-  description: "",
-  category: "",
-  province: "",
-  price: "",
-  lat: "",
-  lng: "",
-};
-
 const CreateLandmarkForm = ({ onSuccess, value }: CreateLandmarkFormProps) => {
   const [formData, setFormData] = useState({
     name: value?.name ?? "",

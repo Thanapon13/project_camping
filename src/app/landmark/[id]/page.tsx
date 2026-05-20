@@ -1,22 +1,29 @@
 import { redirect } from "next/navigation";
 import Breadcrumbs from "@/components/landmark/Breadcrumbs";
-import FavoriteToggleButton from "@/components/card/FavoriteToggleButton";
 import ImageContainer from "@/components/landmark/ImageContainer";
 import LandmarkDescription from "@/components/landmark/LandmarkDescription";
 import LandmarkDetails from "@/components/landmark/LandmarkDetails";
-import MapLandmark from "@/components/landmark/MapLandmark";
 import { fetchLandmarkDetail } from "@/actions/action";
 import ScrollToTop from "@/components/landmark/ScrollToTop";
 import MapLandmarkClient from "@/components/map/MapLandmarkClient";
 
-const LandmarkDetailPage = async ({ params }: { params: { id: string } }) => {
+const LandmarkDetailPage = async ({
+  params,
+  searchParams,
+}: {
+  params: { id: string };
+  searchParams: { from?: string };
+}) => {
   const { id } = await params;
   const landmark = await fetchLandmarkDetail({ id });
+
+  const fromPage = (await searchParams).from || "home";
 
   if (!landmark) redirect("/");
 
   const { name, description, image, province, price, category, lat, lng } =
     landmark;
+
   const firstName = landmark.profile.firstName;
 
   return (
@@ -24,14 +31,9 @@ const LandmarkDetailPage = async ({ params }: { params: { id: string } }) => {
       <ScrollToTop />
 
       {/* 1. Header: Name & Action Buttons */}
-      <Breadcrumbs name={name} />
+      <Breadcrumbs name={name} fromPage={fromPage} />
       <header className="flex justify-between items-center mt-4">
         <h1 className="text-3xl font-bold capitalize">{name}</h1>
-
-        <div className="flex items-center gap-x-4 absolute top-2.5 right-2.5">
-          {/* Share & Favorite */}
-          <FavoriteToggleButton landmarkId={id} />
-        </div>
       </header>
 
       {/* 2. Image Section */}
@@ -52,6 +54,7 @@ const LandmarkDetailPage = async ({ params }: { params: { id: string } }) => {
             firstName={firstName}
             profileImage={landmark.profile.profileImage}
           />
+
           <hr className="my-6" />
           <LandmarkDescription description={description} />
         </div>
