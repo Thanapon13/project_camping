@@ -9,11 +9,19 @@ import {
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { LandmarkCardProps } from "@/utils/types";
-import FavoriteToggleButton from "./FavoriteToggleButton";
 import LandmarkRating from "./LandmarkRating";
 import LandmarkCardActions from "./LandmarkCardActions";
+import FavoriteToggleButton from "./FavoriteToggleButton";
 
-const LandmarkCard = ({ landmark }: { landmark: LandmarkCardProps }) => {
+const LandmarkCard = ({
+  landmark,
+  userId,
+  favoriteId,
+}: {
+  landmark: LandmarkCardProps;
+  userId: string | null;
+  favoriteId: string | null;
+}) => {
   const { name, image, id, description, price, province, category } = landmark;
 
   const truncatedDescription =
@@ -29,16 +37,19 @@ const LandmarkCard = ({ landmark }: { landmark: LandmarkCardProps }) => {
           alt={name}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-          className="object-cover
-          group-hover:scale-105 transition-transform
-           duration-300"
+          className="object-cover group-hover:scale-105 transition-transform duration-300"
         />
 
         <span className="absolute top-3 left-3 bg-background/90 border border-border rounded-full px-3 py-0.5 text-xs text-muted-foreground capitalize">
           {category}
         </span>
 
-        <FavoriteToggleButton landmarkId={id} />
+        <FavoriteToggleButton
+          landmarkId={id}
+          favoriteId={favoriteId}
+          userId={userId}
+        />
+
         <LandmarkCardActions landmark={landmark} />
       </div>
 
@@ -47,7 +58,6 @@ const LandmarkCard = ({ landmark }: { landmark: LandmarkCardProps }) => {
           <p className="font-medium text-sm truncate pr-2">
             {name.substring(0, 40)}
           </p>
-
           <span className="text-sm font-semibold whitespace-nowrap">
             ฿{price.toLocaleString()}
           </span>
@@ -56,10 +66,8 @@ const LandmarkCard = ({ landmark }: { landmark: LandmarkCardProps }) => {
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-1">
             <MapPin className="w-3 h-3 text-muted-foreground" />
-
             <span className="text-xs text-muted-foreground">{province}</span>
           </div>
-
           <LandmarkRating />
         </div>
 

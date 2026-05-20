@@ -1,11 +1,15 @@
-import { auth } from "@clerk/nextjs/server";
 import FavoriteToggleForm from "./FavoriteToggleForm";
 import { SignInCardButton } from "../buttons/Buttons";
-import { fetchFavoriteId } from "@/actions/action";
 
-const FavoriteToggleButton = async ({ landmarkId }: { landmarkId: string }) => {
-  const { userId } = await auth();
-
+const FavoriteToggleButton = ({
+  landmarkId,
+  userId,
+  favoriteId,
+}: {
+  landmarkId: string;
+  userId: string | null;
+  favoriteId: string | null;
+}) => {
   if (!userId) {
     return (
       <div className="absolute top-2.5 right-2.5">
@@ -13,8 +17,6 @@ const FavoriteToggleButton = async ({ landmarkId }: { landmarkId: string }) => {
       </div>
     );
   }
-
-  const favoriteId = await fetchFavoriteId({ landmarkId });
 
   return <FavoriteToggleForm landmarkId={landmarkId} favoriteId={favoriteId} />;
 };

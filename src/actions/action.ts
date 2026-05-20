@@ -12,7 +12,7 @@ import { redirect } from "next/navigation";
 import { uploadFile } from "@/utils/supabase";
 import { revalidatePath } from "next/cache";
 
-const getAuthUser = async () => {
+export const getAuthUser = async () => {
   const user = await currentUser();
 
   if (!user) {
@@ -166,8 +166,15 @@ export const editLandmarkAction = async (
   }
 };
 
-export const fetchLandmarks = async () => {
+export const fetchLandmarks = async ({
+  page = 1,
+  limit = 8,
+}: { page?: number; limit?: number } = {}) => {
+  const skip = (page - 1) * limit;
+
   const data = await db.landmark.findMany({
+    skip: skip,
+    take: limit,
     orderBy: {
       updatedAt: "desc",
     },
@@ -185,30 +192,25 @@ export const toggleFavoriteAction = async (prevState: {
   const user = await getAuthUser();
 
   try {
-    // delete
-    if (favoriteId) {
-      await db.favorite.delete({
-        where: {
-          id: favoriteId,
-        },
-      });
+    // ถ้า favoriteId ไม่ใช่ UUID จริง ให้ถือว่าเป็น create
+    const isValidId = favoriteId && !favoriteId.startsWith("pending");
+
+    if (isValidId) {
+      await db.favorite.delete({ where: { id: favoriteId } });
     } else {
-      // create
       await db.favorite.create({
-        data: {
-          landmarkId,
-          profileId: user?.id,
-        },
+        data: { landmarkId, profileId: user?.id },
       });
     }
 
     revalidatePath(pathname);
 
     return {
-      message: favoriteId ? "Removed Favorite Success" : "Add Favorite Success",
+      code: 0,
+      message: isValidId ? "Removed Favorite Success" : "Add Favorite Success",
     };
   } catch (error) {
-    return renderError(error, 200);
+    return renderError(error, 402);
   }
 };
 
