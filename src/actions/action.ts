@@ -176,27 +176,6 @@ export const fetchLandmarks = async () => {
   return data;
 };
 
-export const fetchFavoriteId = async ({
-  landmarkId,
-}: {
-  landmarkId: string;
-}) => {
-  const user = await getAuthUser();
-
-  const favorite = await db.favorite.findFirst({
-    where: {
-      landmarkId,
-      profileId: user?.id,
-    },
-
-    select: {
-      id: true,
-    },
-  });
-
-  return favorite?.id || null;
-};
-
 export const toggleFavoriteAction = async (prevState: {
   favoriteId: string | null;
   landmarkId: string;
@@ -231,6 +210,27 @@ export const toggleFavoriteAction = async (prevState: {
   } catch (error) {
     return renderError(error, 200);
   }
+};
+
+export const fetchFavoriteId = async ({
+  landmarkId,
+}: {
+  landmarkId: string;
+}) => {
+  const user = await getAuthUser();
+
+  const favorite = await db.favorite.findFirst({
+    where: {
+      landmarkId,
+      profileId: user?.id,
+    },
+
+    select: {
+      id: true,
+    },
+  });
+
+  return favorite?.id || null;
 };
 
 export const fetchFavorits = async () => {
