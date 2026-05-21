@@ -12,7 +12,7 @@ import { redirect } from "next/navigation";
 import { uploadFile } from "@/utils/supabase";
 import { revalidatePath } from "next/cache";
 
-export const getAuthUser = async () => {
+const getAuthUser = async () => {
   const user = await currentUser();
 
   if (!user) {

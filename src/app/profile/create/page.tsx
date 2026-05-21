@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 const CreateProfile = async () => {
   const user = await currentUser();
 
-  if (user?.privateMetadata.hasProfile) redirect("/");
+  // if (user?.privateMetadata.hasProfile) redirect("/");/
 
   return (
     <section>
