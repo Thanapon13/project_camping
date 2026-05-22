@@ -51,14 +51,14 @@ export const FavoriteButton = ({ isFavorite }: { isFavorite: boolean }) => {
   return (
     <Button
       type="submit"
-      variant="outline"
+      variant="ghost"
       size="icon"
       disabled={pending}
       aria-label="Toggle favorite"
-      className={`w-8 h-8 rounded-full cursor-pointer ${
+      className={`w-9 h-9 rounded-full backdrop-blur-sm transition-all duration-200 cursor-pointer ${
         isFavorite
-          ? "bg-pink-50 border-pink-300 text-pink-700"
-          : "bg-background border-border text-muted-foreground"
+          ? "bg-pink-500/20 text-pink-500 hover:bg-pink-500/30"
+          : "bg-white/90 text-muted-foreground hover:bg-white hover:text-pink-500"
       }`}
     >
       {pending ? (

@@ -20,9 +20,10 @@ export type LandmarkCardProps = {
   category: string;
   province: string;
   price: number;
-  lat: number;
-  lng: number;
+  lat?: number;
+  lng?: number;
   profileId: string;
+  favoriteId: string | null;
 };
 
 export type FromPageType = "home" | "favorites";

@@ -17,7 +17,7 @@ const DropdownListMenu = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline">
+        <Button>
           <TextAlignJustify className="h-4 w-4" />
           <UserIcon />
         </Button>

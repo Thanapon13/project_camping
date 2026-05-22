@@ -1,25 +1,86 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { DarkMode } from "./DarkMode";
 import DropdownListMenu from "./DropdownListMenu";
+import links from "@/utils/links";
+
 import Logo from "./Logo";
-import Search from "./Search";
+import MobileMenu from "./MobileMenu";
 
 const Navbar = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <nav>
-      <div className="container flex justify-between flex-wrap py-8">
-        {/* Logo */}
-        <Logo />
+    <motion.header
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled
+          ? "glass border-b border-border/50 shadow-sm"
+          : "bg-transparent"
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 lg:h-20">
+          {/* Logo */}
+          <Logo />
 
-        {/* Search */}
-        <Search />
+          {/* Desktop Menu */}
+          <nav className="hidden md:flex items-center gap-1">
+            {links.map(link => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-muted/50"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
 
-        {/* Darkmode & Profile */}
-        <div className="flex gap-4">
-          <DarkMode />
-          <DropdownListMenu />
+          {/* Desktop Actions */}
+          <div className="hidden md:flex items-center gap-3">
+            <DarkMode />
+            <DropdownListMenu />
+          </div>
+
+          {/* Mobile Menu Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
+          </Button>
         </div>
       </div>
-    </nav>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <MobileMenu onClick={() => setIsMobileMenuOpen(false)} />
+        )}
+      </AnimatePresence>
+    </motion.header>
   );
 };
 

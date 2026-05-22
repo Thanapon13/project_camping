@@ -5,11 +5,20 @@ import { Pencil, Trash2 } from "lucide-react";
 import useLandmark from "@/hooks/useLandmark";
 import { LandmarkCardProps } from "@/utils/types";
 
-const LandmarkCardActions = ({ landmark }: { landmark: LandmarkCardProps }) => {
+const LandmarkCardActions = ({
+  landmark,
+  onClick,
+}: {
+  landmark: LandmarkCardProps;
+  onClick?: (e: React.MouseEvent) => void;
+}) => {
   const { handleEdit, handleDelete } = useLandmark();
 
   return (
-    <div className="absolute top-3 right-12 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+    <div
+      onClick={onClick}
+      className="absolute top-3 right-12 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+    >
       <Button
         variant="secondary"
         size="icon"

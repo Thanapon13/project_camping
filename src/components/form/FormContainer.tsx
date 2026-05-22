@@ -15,11 +15,13 @@ const FormContainer = ({
   action,
   children,
   onSuccess,
+  onClick,
 }: {
   className?: string;
   action: actionFunction;
   children: React.ReactNode;
   onSuccess?: () => void;
+  onClick?: (e: React.MouseEvent) => void;
 }) => {
   const [state, formAction] = useActionState(action, initialState);
   const onSuccessRef = useRef(onSuccess);
@@ -52,7 +54,7 @@ const FormContainer = ({
   }, [state]);
 
   return (
-    <form action={formAction} className={className}>
+    <form action={formAction} className={className} onClick={onClick}>
       {children}
     </form>
   );

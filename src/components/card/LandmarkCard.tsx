@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { MapPin } from "lucide-react";
+import { MapPin, Star } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -12,19 +12,22 @@ import { FromPageType, LandmarkCardProps } from "@/utils/types";
 import LandmarkRating from "./LandmarkRating";
 import LandmarkCardActions from "./LandmarkCardActions";
 import FavoriteToggleButton from "./FavoriteToggleButton";
+import { motion } from "framer-motion";
 
 const LandmarkCard = ({
   landmark,
   userId,
   favoriteId,
   fromPage,
+  index = 0,
 }: {
   landmark: LandmarkCardProps;
   userId: string | null;
   favoriteId: string | null;
   fromPage?: FromPageType;
+  index?: number;
 }) => {
-  const { name, image, id, description, price, province, category, profileId } =
+  const { name, image, id, description, province, category, profileId } =
     landmark;
 
   const truncatedDescription =
@@ -33,58 +36,66 @@ const LandmarkCard = ({
       : description;
 
   return (
-    <Card className="overflow-hidden">
-      <div className="group relative h-[300px] bg-muted">
-        <Image
-          src={image}
-          alt={name}
-          fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-          className="object-cover group-hover:scale-105 transition-transform duration-300"
-        />
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: index * 0.05 }}
+    >
+      <div className="relative rounded-2xl bg-card border border-border/50 shadow-sm hover:shadow-xl transition-all duration-300 group">
+        <Link href={`/landmark/${id}?from=${fromPage}`} className="block">
+          {/* Image Container */}
+          <div className="relative aspect-[4/3] overflow-hidden rounded-t-2xl">
+            <Image
+              src={image || "/placeholder.svg"}
+              alt={name}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+            />
 
-        <span className="absolute top-3 left-3 bg-background/90 border border-border rounded-full px-3 py-0.5 text-xs text-muted-foreground capitalize">
-          {category}
-        </span>
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
-        <FavoriteToggleButton
-          landmarkId={id}
-          favoriteId={favoriteId}
-          userId={userId}
-        />
-
-        {userId === profileId && <LandmarkCardActions landmark={landmark} />}
-      </div>
-
-      <CardContent className="p-4">
-        <div className="flex justify-between items-start mb-1">
-          <p className="font-medium text-sm truncate pr-2">
-            {name.substring(0, 40)}
-          </p>
-          <span className="text-sm font-semibold whitespace-nowrap">
-            ฿{price.toLocaleString()}
-          </span>
-        </div>
-
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-1">
-            <MapPin className="w-3 h-3 text-muted-foreground" />
-            <span className="text-xs text-muted-foreground">{province}</span>
+            {/* Category Badge */}
+            <span className="absolute top-4 left-4 px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-sm text-xs font-medium text-foreground capitalize">
+              {category}
+            </span>
           </div>
-          <LandmarkRating />
+
+          {/* Content */}
+          <div className="p-4">
+            <div className="flex items-start justify-between gap-2 mb-2">
+              <h3 className="font-semibold text-foreground line-clamp-1 group-hover:text-primary transition-colors">
+                {name}
+              </h3>
+              <div className="flex items-center gap-1 text-amber-500">
+                <Star className="w-4 h-4 fill-amber-500" />
+                <span className="text-sm font-medium">4.8</span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1.5 text-muted-foreground mb-3">
+              <MapPin className="w-3.5 h-3.5" />
+              <span className="text-sm">{province}</span>
+            </div>
+
+            <p className="text-sm text-muted-foreground line-clamp-2">
+              {truncatedDescription}
+            </p>
+          </div>
+        </Link>
+
+        <div className="z-10" onClick={e => e.stopPropagation()}>
+          <FavoriteToggleButton
+            landmarkId={id}
+            favoriteId={favoriteId}
+            userId={userId}
+          />
+
+          {userId === profileId && <LandmarkCardActions landmark={landmark} />}
         </div>
-
-        <CardDescription className="text-sm leading-relaxed h-[50px] wrap-break-word">
-          {truncatedDescription}
-        </CardDescription>
-      </CardContent>
-
-      <CardFooter className="p-4 pt-0 flex flex-col">
-        <Button asChild className="w-full">
-          <Link href={`/landmark/${id}?from=${fromPage}`}>View details</Link>
-        </Button>
-      </CardFooter>
-    </Card>
+      </div>
+    </motion.div>
   );
 };
 
