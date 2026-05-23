@@ -10,8 +10,10 @@ import {
 } from "@/components/ui/dialog";
 import CreateLandmarkForm from "../landmark/CreateLandmarkForm";
 import useLandmark from "@/hooks/useLandmark";
+import { SignInCardButton } from "../buttons/Buttons";
+import { SignInButton } from "@clerk/nextjs";
 
-const LandmarkModal = () => {
+const LandmarkModal = ({ userId }: { userId: String | null }) => {
   const { open, setOpen, modalMode, selectedCard, handleCreate } =
     useLandmark();
 
@@ -21,6 +23,17 @@ const LandmarkModal = () => {
       : modalMode === "edit"
         ? "Edit Landmark"
         : "Delete Landmark";
+
+  if (!userId) {
+    return (
+      <SignInButton mode="modal">
+        <Button size="sm" className="flex items-center gap-2">
+          <Plus className="w-4 h-4" />
+          Create Landmark
+        </Button>
+      </SignInButton>
+    );
+  }
 
   return (
     <>

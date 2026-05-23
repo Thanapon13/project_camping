@@ -4,6 +4,7 @@ import {
   imageSchema,
   landmarkSchema,
   profileSchema,
+  validateComment,
   validateWithZod,
 } from "@/utils/schemas";
 import { clerkClient, currentUser } from "@clerk/nextjs/server";
@@ -91,7 +92,6 @@ export const createLandmarkAction = async (
 }> => {
   try {
     const user = await getAuthUser();
-    console.log("user:", user.id);
 
     const rawData = Object.fromEntries(
       Array.from(formData.entries()).filter(([key]) => !key.startsWith("$")),
@@ -291,4 +291,89 @@ export const fetchLandmarkDetail = async ({ id }: { id: string }) => {
       profile: true,
     },
   });
+};
+
+export const createCommentAction = async (
+  prevState: any,
+  formData: FormData,
+) => {
+  try {
+    const user = await currentUser();
+    if (!user) throw new Error("Please Login!!!");
+
+    const rawData = Object.fromEntries(
+      Array.from(formData.entries()).filter(([key]) => !key.startsWith("$")),
+    );
+
+    const validatedComment = validateWithZod(validateComment, rawData);
+
+    await db.comment.create({
+      data: {
+        comment: validatedComment.comment,
+        rating: validatedComment.rating,
+        profileId: user.id,
+        landmarkId: validatedComment.landmarkId,
+      },
+    });
+
+    revalidatePath(`/landmark/${validatedComment.landmarkId}`);
+    return { message: "Comment posted successfully.!", code: 200 };
+  } catch (err) {
+    return renderError(err, 402);
+  }
+};
+
+export const fetchComments = async ({ landmarkId }: { landmarkId: string }) => {
+  const comments = await db.comment.findMany({
+    where: { landmarkId, parentId: null },
+    include: {
+      profile: {
+        select: { firstName: true, lastName: true, profileImage: true },
+      },
+      replies: {
+        include: {
+          profile: {
+            select: { firstName: true, lastName: true, profileImage: true },
+          },
+        },
+        orderBy: { createdAt: "asc" },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return comments;
+};
+
+export const createReplyAction = async (prevState: any, formData: FormData) => {
+  try {
+    const user = await currentUser();
+    if (!user) throw new Error("Please Login!!!");
+
+    const rawData = Object.fromEntries(
+      Array.from(formData.entries()).filter(([key]) => !key.startsWith("$")),
+    );
+
+    const reply = rawData.reply as string;
+    const parentId = rawData.parentId as string;
+    const landmarkId = rawData.landmarkId as string;
+
+    if (!reply?.trim()) throw new Error("Please enter your reply");
+    if (!parentId) throw new Error("Invalid comment");
+
+    await db.comment.create({
+      data: {
+        comment: reply,
+        rating: 0,
+        profileId: user.id,
+        landmarkId,
+        parentId,
+      },
+    });
+
+    revalidatePath(`/landmark/${landmarkId}`);
+    return { message: "Reply posted successfully!", code: 200 };
+  } catch (err) {
+    return renderError(err, 402);
+  }
 };

@@ -10,9 +10,11 @@ import { useState, useCallback } from "react";
 const FavoriteToggleForm = ({
   favoriteId: initialFavoriteId,
   landmarkId,
+  className,
 }: {
   favoriteId: string | null;
   landmarkId: string;
+  className?: string;
 }) => {
   const pathname = usePathname();
   // แยก state ออกเป็น 2 ตัว: favoriteId จริง และ UI state
@@ -37,10 +39,10 @@ const FavoriteToggleForm = ({
   return (
     <FormContainer
       action={toggleAction}
-      className="absolute top-2.5 right-2.5"
+      className={`${className ? "" : "absolute top-2.5 right-2.5"}`}
       onSuccess={handleSuccess}
     >
-      <FavoriteButton isFavorite={isFavorite} />
+      <FavoriteButton isFavorite={isFavorite} className={className} />
     </FormContainer>
   );
 };

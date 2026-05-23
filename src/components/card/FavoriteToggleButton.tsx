@@ -5,20 +5,28 @@ const FavoriteToggleButton = ({
   landmarkId,
   userId,
   favoriteId,
+  className,
 }: {
   landmarkId: string;
   userId: string | null;
   favoriteId: string | null;
+  className?: string;
 }) => {
   if (!userId) {
     return (
-      <div className="absolute top-2.5 right-2.5">
-        <SignInCardButton />
+      <div className={`${className ? "" : "absolute top-2.5 right-2.5"}`}>
+        <SignInCardButton className={className} />
       </div>
     );
   }
 
-  return <FavoriteToggleForm landmarkId={landmarkId} favoriteId={favoriteId} />;
+  return (
+    <FavoriteToggleForm
+      landmarkId={landmarkId}
+      favoriteId={favoriteId}
+      className={className}
+    />
+  );
 };
 
 export default FavoriteToggleButton;

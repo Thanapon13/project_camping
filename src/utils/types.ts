@@ -26,4 +26,32 @@ export type LandmarkCardProps = {
   favoriteId: string | null;
 };
 
+export type ReplyProps = {
+  id: string;
+  comment: string;
+  rating: number;
+  createdAt: Date;
+  profileId: string;
+  profile: {
+    firstName: string;
+    lastName: string;
+    profileImage: string;
+  };
+};
+
+export type CommentProps = {
+  id: string;
+  comment: string;
+  rating: number;
+  createdAt: Date;
+  profileId: string;
+  landmarkId: string;
+  profile: {
+    firstName: string;
+    lastName: string;
+    profileImage: string;
+  };
+  replies: ReplyProps[]; // ← เพิ่มตรงนี้
+};
+
 export type FromPageType = "home" | "favorites";

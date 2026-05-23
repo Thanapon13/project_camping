@@ -10,7 +10,7 @@ const LandmarkContainer = async () => {
   return (
     <section className="py-16 lg:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <LandmarkHeader />
+        <LandmarkHeader userId={userId} />
         <Landmarklist initialLandmarks={initialLandmarks} userId={userId} />
       </div>
     </section>

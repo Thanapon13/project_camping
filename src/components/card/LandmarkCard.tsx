@@ -1,15 +1,7 @@
 import Link from "next/link";
 import { MapPin, Star } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { FromPageType, LandmarkCardProps } from "@/utils/types";
-import LandmarkRating from "./LandmarkRating";
 import LandmarkCardActions from "./LandmarkCardActions";
 import FavoriteToggleButton from "./FavoriteToggleButton";
 import { motion } from "framer-motion";
@@ -42,7 +34,10 @@ const LandmarkCard = ({
       transition={{ duration: 0.4, delay: index * 0.05 }}
     >
       <div className="relative rounded-2xl bg-card border border-border/50 shadow-sm hover:shadow-xl transition-all duration-300 group">
-        <Link href={`/landmark/${id}?from=${fromPage}`} className="block">
+        <Link
+          href={`/landmark/${id}?from=${fromPage}${favoriteId ? `&favoriteId=${favoriteId}` : ""}`}
+          className="block"
+        >
           {/* Image Container */}
           <div className="relative aspect-[4/3] overflow-hidden rounded-t-2xl">
             <Image

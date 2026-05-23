@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Plus } from "lucide-react";
 import LandmarkModal from "../landmark/LandmarkModal";
 
-const LandmarkHeader = () => {
+const LandmarkHeader = ({ userId }: { userId: String | null }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -25,7 +25,7 @@ const LandmarkHeader = () => {
       </div>
 
       <div className="flex items-center gap-3">
-        <LandmarkModal />
+        <LandmarkModal userId={userId} />
 
         <Button variant="ghost" className="gap-2 group">
           View all

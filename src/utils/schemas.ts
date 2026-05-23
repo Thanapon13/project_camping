@@ -62,6 +62,19 @@ export const landmarkSchema = z.object({
     .max(180, { message: "Invalid longitude" }),
 });
 
+export const validateComment = z.object({
+  landmarkId: z.string().min(1, "Landmark ID is required"),
+  userId: z.string().min(1, "Please login to comment"),
+  rating: z.coerce
+    .number()
+    .min(1, "Please give a rating before posting")
+    .max(5, "Rating must be between 1-5"),
+  comment: z
+    .string()
+    .min(1, "Please enter your comment")
+    .max(500, "Comment is too long (max 500 characters)"),
+});
+
 export const validateWithZod = <T>(schema: z.ZodType<T>, data: unknown): T => {
   const result = schema.safeParse(data);
 

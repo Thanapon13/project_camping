@@ -1,4 +1,3 @@
-import LoadingCard from "@/components/card/LoadingCard";
 import CategoryFilter from "@/components/home/CategoryFilter";
 import CTASection from "@/components/home/CTASection";
 import FeaturedSection from "@/components/home/FeaturedSection";
