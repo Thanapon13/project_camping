@@ -2,27 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import {
-  Landmark,
-  Mountain,
-  Waves,
-  TreePine,
-  Building2,
-  Utensils,
-  Camera,
-  Star,
-} from "lucide-react";
-
-const categories = [
-  { id: "all", label: "All", icon: Star },
-  { id: "temple", label: "Temples", icon: Landmark },
-  { id: "mountain", label: "Mountains", icon: Mountain },
-  { id: "beach", label: "Beaches", icon: Waves },
-  { id: "nature", label: "Nature", icon: TreePine },
-  { id: "city", label: "Cities", icon: Building2 },
-  { id: "food", label: "Food", icon: Utensils },
-  { id: "attraction", label: "Attractions", icon: Camera },
-];
+import { categories } from "@/utils/category";
 
 interface CategoryFilterProps {
   onCategoryChange?: (category: string) => void;

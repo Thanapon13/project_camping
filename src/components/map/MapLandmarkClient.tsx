@@ -11,10 +11,11 @@ const MapLandmark = dynamic(() => import("./MapLandmark"), {
 
 type Props = {
   location?: { lat: number; lng: number };
+  isViewOnly?: boolean; // 🟢 เพิ่มตรงนี้
 };
 
-const MapLandmarkClient = ({ location }: Props) => {
-  return <MapLandmark location={location} />;
+const MapLandmarkClient = ({ location, isViewOnly }: Props) => {
+  return <MapLandmark location={location} isViewOnly={isViewOnly} />;
 };
 
 export default MapLandmarkClient;

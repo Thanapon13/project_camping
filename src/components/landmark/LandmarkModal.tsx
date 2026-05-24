@@ -10,8 +10,8 @@ import {
 } from "@/components/ui/dialog";
 import CreateLandmarkForm from "../landmark/CreateLandmarkForm";
 import useLandmark from "@/hooks/useLandmark";
-import { SignInCardButton } from "../buttons/Buttons";
 import { SignInButton } from "@clerk/nextjs";
+import DeleteLandmarkForm from "./DeleteLandmarkForm";
 
 const LandmarkModal = ({ userId }: { userId: String | null }) => {
   const { open, setOpen, modalMode, selectedCard, handleCreate } =
@@ -64,23 +64,11 @@ const LandmarkModal = ({ userId }: { userId: String | null }) => {
           )}
 
           {modalMode === "delete" && selectedCard && (
-            <div className="space-y-4 py-4">
-              <p className="text-sm text-muted-foreground">
-                คุณแน่ใจหรือไม่ว่าต้องการลบ{" "}
-                <span className="font-semibold text-foreground">
-                  {selectedCard.name}
-                </span>
-                ? การกระทำนี้ไม่สามารถย้อนกลับได้
-              </p>
-              <div className="flex gap-2 justify-end">
-                <Button variant="outline" onClick={() => setOpen(false)}>
-                  ยกเลิก
-                </Button>
-                <Button variant="destructive" onClick={() => setOpen(false)}>
-                  ยืนยันลบ
-                </Button>
-              </div>
-            </div>
+            <DeleteLandmarkForm
+              name={selectedCard?.name}
+              onClick={() => setOpen(false)}
+              id={selectedCard?.id}
+            />
           )}
         </DialogContent>
       </Dialog>

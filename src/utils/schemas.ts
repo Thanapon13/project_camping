@@ -17,8 +17,8 @@ const validateImage = () => {
   const validTypes = ["image/jpeg", "image/png", "image/webp"];
 
   return z
-    .instanceof(File)
-    .refine(file => file.size > 0, "Please select an image")
+    .instanceof(File, { message: "Please select at least 1 image" })
+    .refine(file => file.size > 0, "Please select at least 1 image")
     .refine(file => file.size <= maxFileSize, "File size must be less than 1MB")
     .refine(
       file => validTypes.includes(file.type),

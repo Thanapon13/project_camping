@@ -78,6 +78,7 @@ const CreateCommentForm = ({
               text="Post"
               size="sm"
               className="px-4 py-1.5 bg-primary text-primary-foreground text-sm rounded-lg font-medium hover:opacity-90 transition-opacity"
+              pendingText="Please wait..."
             />
           </div>
         </div>

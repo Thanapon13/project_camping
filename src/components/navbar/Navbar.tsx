@@ -40,19 +40,6 @@ const Navbar = () => {
           <Logo />
 
           {/* Desktop Menu */}
-          <nav className="hidden md:flex items-center gap-1">
-            {links.map(link => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-muted/50"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-
-          {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-3">
             <DarkMode />
             <DropdownListMenu />

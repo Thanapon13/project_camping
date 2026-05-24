@@ -29,7 +29,7 @@ const LandmarkDescription = ({ description }: LandmarkDescriptionProps) => {
         <div className="p-2 rounded-lg bg-primary/10">
           <Quote className="w-5 h-5 text-primary" />
         </div>
-        <h3 className="text-xl font-semibold">About this place</h3>
+        <h3 className="text-xl font-semibold">Description</h3>
       </div>
 
       <div className="relative wrap-break-word">

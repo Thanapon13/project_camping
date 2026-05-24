@@ -1,10 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
-import { Star, MoreHorizontal } from "lucide-react";
 import { useState } from "react";
 import { CommentProps } from "@/utils/types";
+import { Star } from "lucide-react";
 import {
   LikeButton,
   ReplyButton,
@@ -12,6 +11,10 @@ import {
 } from "../buttons/Buttons";
 import ReplyForm from "./ReplyForm";
 import ReplyList from "./ReplyList";
+import { CommentButtonAction } from "./CommentButtonAction";
+import Avatar from "@/user/Avatar";
+import EditCommentForm from "./EditCommentForm";
+import { updateCommentAction } from "@/actions/action";
 
 const formatDate = (date: Date) =>
   new Intl.DateTimeFormat("en-US", {
@@ -35,6 +38,7 @@ const CommentCard = ({
 }) => {
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const handleReplyClick = () => {
     if (!userId) return;
@@ -49,16 +53,7 @@ const CommentCard = ({
       transition={{ delay: 0.1 + index * 0.1 }}
     >
       <div className="flex gap-4 p-4 rounded-2xl hover:bg-accent/30 transition-colors group">
-        {/* Avatar */}
-        <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 ring-2 ring-border">
-          <Image
-            src={comment.profile.profileImage}
-            alt={`${comment.profile.firstName} ${comment.profile.lastName}`}
-            width={40}
-            height={40}
-            className="object-cover w-full h-full"
-          />
-        </div>
+        <Avatar userImage={comment.profile.profileImage} />
 
         <div className="flex-1 min-w-0">
           {/* Header */}
@@ -85,31 +80,41 @@ const CommentCard = ({
             </div>
           </div>
 
-          {/* Comment Text */}
-          <p className="text-sm text-foreground/80 leading-relaxed mb-3">
-            {comment.comment}
-          </p>
-
-          {/* Actions */}
-          <div className="flex items-center gap-4">
-            <LikeButton />
-
-            <ReplyButton
-              showReplyForm={showReplyForm}
-              replyCount={comment.replies.length}
-              onClick={handleReplyClick}
+          {/* Comment Text OR Edit Form */}
+          {isEditing ? (
+            <EditCommentForm
+              commentId={comment.id}
+              initialComment={comment.comment}
+              onSave={updateCommentAction}
+              onCancel={() => setIsEditing(false)}
             />
-            {comment.replies.length > 0 && (
-              <ToggleRepliesButton
-                showReplies={showReplies}
+          ) : (
+            <p className="text-sm text-foreground/80 leading-relaxed mb-3">
+              {comment.comment}
+            </p>
+          )}
+
+          {!isEditing && (
+            <div className="flex items-center gap-4">
+              <LikeButton />
+
+              <ReplyButton
+                showReplyForm={showReplyForm}
                 replyCount={comment.replies.length}
-                onClick={() => setShowReplies(prev => !prev)}
+                onClick={handleReplyClick}
               />
-            )}
-          </div>
+              {comment.replies.length > 0 && (
+                <ToggleRepliesButton
+                  showReplies={showReplies}
+                  replyCount={comment.replies.length}
+                  onClick={() => setShowReplies(prev => !prev)}
+                />
+              )}
+            </div>
+          )}
 
           {/* Reply Form */}
-          {showReplyForm && userId && (
+          {showReplyForm && userId && !isEditing && (
             <ReplyForm
               commentId={comment.id}
               landmarkId={comment.landmarkId}
@@ -130,9 +135,14 @@ const CommentCard = ({
         </div>
 
         {/* More Options */}
-        <button className="p-1.5 rounded-lg hover:bg-accent opacity-0 group-hover:opacity-100 transition-all self-start">
-          <MoreHorizontal className="w-4 h-4 text-muted-foreground" />
-        </button>
+        {userId === comment.profileId && !isEditing && (
+          <CommentButtonAction
+            onEdit={() => setIsEditing(true)}
+            onDelete={() => {
+              console.log("ต้องการลบคอมเมนต์ ID:", comment.id);
+            }}
+          />
+        )}
       </div>
 
       {index < totalCount - 1 && (

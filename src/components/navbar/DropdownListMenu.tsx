@@ -15,7 +15,7 @@ import { Show, SignInButton, SignUpButton } from "@clerk/nextjs";
 
 const DropdownListMenu = () => {
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button>
           <TextAlignJustify className="h-4 w-4" />

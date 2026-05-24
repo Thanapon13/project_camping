@@ -12,6 +12,7 @@ import { createLandmarkAction, editLandmarkAction } from "@/actions/action";
 import { SubmitButton } from "../buttons/Buttons";
 import { useState } from "react";
 import { LandmarkCardProps } from "@/utils/types";
+import FieldError from "../error/FieldError";
 
 interface CreateLandmarkFormProps {
   onSuccess?: () => void;
@@ -31,6 +32,8 @@ const CreateLandmarkForm = ({ onSuccess, value }: CreateLandmarkFormProps) => {
 
   const [imageFile, setImageFile] = useState<File | null>(null);
 
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
   const { name, description, price, lat, lng } = formData;
 
   const handleChange = (
@@ -38,26 +41,52 @@ const CreateLandmarkForm = ({ onSuccess, value }: CreateLandmarkFormProps) => {
   ) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+
+    // ถ้าผู้ใช้เริ่มพิมพ์แก้ ให้เคลียร์ Error ของช่องนั้นทิ้งทันที
+    if (errors[name]) {
+      setErrors(prev => {
+        const next = { ...prev };
+        delete next[name];
+        return next;
+      });
+    }
   };
 
   const handleSelectChange = (name: string) => (value: string) => {
     setFormData(prev => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors(prev => {
+        const next = { ...prev };
+        delete next[name];
+        return next;
+      });
+    }
   };
 
   const handleFormAction = async (
     prevState: any,
     formDataPayload: FormData,
   ) => {
+    setErrors({});
+
     if (imageFile) {
       formDataPayload.set("image", imageFile);
     }
 
+    let result;
+
     if (!value?.id) {
-      return createLandmarkAction(prevState, formDataPayload);
+      result = await createLandmarkAction(prevState, formDataPayload);
     } else {
       formDataPayload.set("id", value.id);
-      return editLandmarkAction(prevState, formDataPayload);
+      result = await editLandmarkAction(prevState, formDataPayload);
     }
+
+    if (result && result.errors) {
+      setErrors(result.errors);
+    }
+
+    return result;
   };
 
   const isEdit = !!value;
@@ -65,48 +94,68 @@ const CreateLandmarkForm = ({ onSuccess, value }: CreateLandmarkFormProps) => {
   return (
     <FormContainer action={handleFormAction} onSuccess={onSuccess}>
       <div className="grid md:grid-cols-3 gap-4 mt-4">
-        <FormInput
-          name="name"
-          value={name}
-          type="text"
-          label="Landmark Name"
-          placeholder="Landmark Name"
-          onChange={handleChange}
-        />
+        <div>
+          <FormInput
+            name="name"
+            value={name}
+            type="text"
+            label="Landmark Name"
+            placeholder="Landmark Name"
+            onChange={handleChange}
+          />
+          <FieldError message={errors.name} />
+        </div>
 
-        <SelectField
-          name="category"
-          data={categories}
-          defaultValue={formData.category}
-          onValueChange={handleSelectChange("category")}
-        />
+        <div>
+          <SelectField
+            name="category"
+            data={categories}
+            defaultValue={formData.category}
+            onValueChange={handleSelectChange("category")}
+          />
+          <FieldError message={errors.category} />
+        </div>
       </div>
 
-      <TextAreaInput
-        name="description"
-        value={description}
-        onChange={handleChange}
-      />
+      <div className="mt-4">
+        <TextAreaInput
+          name="description"
+          value={description}
+          onChange={handleChange}
+        />
+        <FieldError message={errors.description} />
+      </div>
 
       <div className="grid md:grid-cols-2 gap-4 mt-4">
-        <FormInput
-          name="price"
-          value={price}
-          type="number"
-          label="Price"
-          placeholder="Price"
-          onChange={handleChange}
-        />
+        <div>
+          <FormInput
+            name="price"
+            value={price}
+            type="number"
+            label="Price"
+            placeholder="Price"
+            onChange={handleChange}
+          />
+          <FieldError message={errors.price} />
+        </div>
 
-        <SelectField
-          name="province"
-          data={provinces}
-          defaultValue={formData.province}
-          onValueChange={handleSelectChange("province")}
-        />
+        <div>
+          <SelectField
+            name="province"
+            data={provinces}
+            defaultValue={formData.province}
+            onValueChange={handleSelectChange("province")}
+          />
+          <FieldError message={errors.province} />
+        </div>
       </div>
 
-      <ImageInput file={imageFile} onChange={setImageFile} />
+      <ImageInput
+        file={imageFile}
+        onChange={setImageFile}
+        error={errors.image}
+        existingImage={value?.image}
+      />
 
       <MapLandmarkClient
         location={{
@@ -119,6 +168,7 @@ const CreateLandmarkForm = ({ onSuccess, value }: CreateLandmarkFormProps) => {
         text={isEdit ? "Update Landmark" : "Create Landmark"}
         size="sm"
         className="mt-10"
+        pendingText={isEdit ? "Updating..." : "Creating..."}
       />
     </FormContainer>
   );

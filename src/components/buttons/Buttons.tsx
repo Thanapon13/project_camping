@@ -7,17 +7,28 @@ import {
   ChevronUp,
   Heart,
   MessageCircle,
+  Pencil,
   RotateCw,
+  Trash2,
 } from "lucide-react";
 import { SignInButton } from "@clerk/nextjs";
 
 type btnSize = "default" | "lg" | "sm";
+type ButtonVariant =
+  | "default"
+  | "destructive"
+  | "outline"
+  | "secondary"
+  | "ghost"
+  | "link";
 
 type SubmitButtonProps = {
   className?: string;
   size?: btnSize;
   text?: string;
   disabled?: boolean;
+  variant?: ButtonVariant;
+  pendingText: string;
 };
 
 export const SubmitButton = ({
@@ -25,6 +36,8 @@ export const SubmitButton = ({
   size,
   text,
   disabled,
+  variant,
+  pendingText,
 }: SubmitButtonProps) => {
   const { pending } = useFormStatus();
 
@@ -34,11 +47,12 @@ export const SubmitButton = ({
       type="submit"
       size={size}
       className={`${className} capitalize`}
+      variant={variant}
     >
       {pending ? (
         <>
           <RotateCw className="animate-spin" />
-          <span>Please wait...</span>
+          <span>{pendingText}</span>
         </>
       ) : (
         text
@@ -170,5 +184,31 @@ export const SignInTextButton = ({ text }: { text: string }) => {
         {text}
       </button>
     </SignInButton>
+  );
+};
+
+export const LandmarkCardButtonActions = ({
+  title,
+  className,
+  onClick,
+}: {
+  title: string;
+  className?: string;
+  onClick: (e: React.MouseEvent) => void;
+}) => {
+  return (
+    <Button
+      variant="secondary"
+      size="icon"
+      className={`h-8 w-8 rounded-full bg-background/90 backdrop-blur-sm shadow-sm hover:bg-background cursor-pointer" ${className || ""}`}
+      onClick={onClick}
+      title={title}
+    >
+      {title === "Edit Landmark" ? (
+        <Pencil className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+      ) : (
+        <Trash2 className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+      )}
+    </Button>
   );
 };

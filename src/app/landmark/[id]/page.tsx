@@ -57,7 +57,8 @@ const LandmarkDetailPage = async ({
           </div>
         </div>
 
-        <MapLandmarkClient location={{ lat, lng }} />
+        <MapLandmarkClient location={{ lat, lng }} isViewOnly={true} />
+
         <CommentContainer
           landmarkId={id}
           userId={userId}

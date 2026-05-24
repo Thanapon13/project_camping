@@ -39,7 +39,12 @@ const CreateProfile = async () => {
             />
           </div>
 
-          <SubmitButton text="Create Profile" size="sm" className="mt-10" />
+          <SubmitButton
+            text="Create Profile"
+            size="sm"
+            className="mt-10"
+            pendingText="Please wait..."
+          />
         </FormContainer>
       </div>
     </section>

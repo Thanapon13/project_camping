@@ -76,6 +76,7 @@ const ReplyForm = ({
                 size="sm"
                 disabled={!replyText.trim()}
                 className="px-4 py-1.5 bg-primary text-primary-foreground text-sm rounded-lg font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                pendingText="Replying..."
               />
             </div>
           </div>
