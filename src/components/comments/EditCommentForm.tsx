@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea"; // 🟢 ดึงกลับมาใช้แทน textarea ปกติ
+import { Textarea } from "@/components/ui/textarea";
 import { SubmitButton } from "../buttons/Buttons";
 import FormContainer from "../form/FormContainer";
 

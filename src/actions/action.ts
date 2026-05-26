@@ -408,7 +408,7 @@ export const createReplyAction = async (prevState: any, formData: FormData) => {
   }
 };
 
-export const updateCommentAction = async (
+export const editCommentAction = async (
   prevState: any,
   formData: FormData,
 ): Promise<{ message: string; code: number }> => {
@@ -416,7 +416,6 @@ export const updateCommentAction = async (
     const user = await currentUser();
     if (!user) throw new Error("Please Login!!!");
 
-    // ดึงค่าออกจาก FormData
     const commentId = formData.get("commentId") as string;
     const newComment = formData.get("comment") as string;
 
@@ -429,6 +428,26 @@ export const updateCommentAction = async (
 
     revalidatePath(`/landmark/${updatedComment.landmarkId}`);
     return { message: "แก้ไขคอมเมนต์สำเร็จ!", code: 200 };
+  } catch (err) {
+    return renderError(err, 402);
+  }
+};
+
+export const deleteCommentAction = async (
+  prevState: any,
+  formData: FormData,
+) => {
+  try {
+    const user = await currentUser();
+    if (!user) throw new Error("Please Login!!!");
+    const id = formData.get("id") as string;
+
+    const deletedComment = await db.comment.delete({
+      where: { id, profileId: user.id },
+    });
+
+    revalidatePath(`/landmark/${deletedComment.landmarkId}`);
+    return { code: 200, message: "ลบคอมเมนต์สำเร็จ" };
   } catch (err) {
     return renderError(err, 402);
   }

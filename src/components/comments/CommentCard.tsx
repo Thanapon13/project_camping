@@ -4,17 +4,13 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { CommentProps } from "@/utils/types";
 import { Star } from "lucide-react";
-import {
-  LikeButton,
-  ReplyButton,
-  ToggleRepliesButton,
-} from "../buttons/Buttons";
 import ReplyForm from "./ReplyForm";
 import ReplyList from "./ReplyList";
 import { CommentButtonAction } from "./CommentButtonAction";
 import Avatar from "@/user/Avatar";
 import EditCommentForm from "./EditCommentForm";
-import { updateCommentAction } from "@/actions/action";
+import { editCommentAction } from "@/actions/action";
+import CommentInteractions from "./CommentInteractions";
 
 const formatDate = (date: Date) =>
   new Intl.DateTimeFormat("en-US", {
@@ -85,7 +81,7 @@ const CommentCard = ({
             <EditCommentForm
               commentId={comment.id}
               initialComment={comment.comment}
-              onSave={updateCommentAction}
+              onSave={editCommentAction}
               onCancel={() => setIsEditing(false)}
             />
           ) : (
@@ -95,22 +91,13 @@ const CommentCard = ({
           )}
 
           {!isEditing && (
-            <div className="flex items-center gap-4">
-              <LikeButton />
-
-              <ReplyButton
-                showReplyForm={showReplyForm}
-                replyCount={comment.replies.length}
-                onClick={handleReplyClick}
-              />
-              {comment.replies.length > 0 && (
-                <ToggleRepliesButton
-                  showReplies={showReplies}
-                  replyCount={comment.replies.length}
-                  onClick={() => setShowReplies(prev => !prev)}
-                />
-              )}
-            </div>
+            <CommentInteractions
+              comment={comment}
+              showReplyForm={showReplyForm}
+              showReplies={showReplies}
+              handleReplyClick={handleReplyClick}
+              setShowReplies={setShowReplies}
+            />
           )}
 
           {/* Reply Form */}
@@ -127,7 +114,6 @@ const CommentCard = ({
               userImage={userImage}
             />
           )}
-
           {/* Replies List */}
           {showReplies && comment.replies.length > 0 && (
             <ReplyList replies={comment.replies} formatDate={formatDate} />

@@ -11,7 +11,8 @@ import {
 import CreateLandmarkForm from "../landmark/CreateLandmarkForm";
 import useLandmark from "@/hooks/useLandmark";
 import { SignInButton } from "@clerk/nextjs";
-import DeleteLandmarkForm from "./DeleteLandmarkForm";
+import DeleteConfirmationForm from "../form/DeleteConfirmationForm";
+import { deleteLandmarkAction } from "@/actions/action";
 
 const LandmarkModal = ({ userId }: { userId: String | null }) => {
   const { open, setOpen, modalMode, selectedCard, handleCreate } =
@@ -64,10 +65,13 @@ const LandmarkModal = ({ userId }: { userId: String | null }) => {
           )}
 
           {modalMode === "delete" && selectedCard && (
-            <DeleteLandmarkForm
-              name={selectedCard?.name}
-              onClick={() => setOpen(false)}
+            <DeleteConfirmationForm
               id={selectedCard?.id}
+              name={selectedCard?.name}
+              description="ข้อมูลแลนด์มาร์กและคอมเมนต์ทั้งหมดในสถานที่นี้จะถูกลบถาวร"
+              action={deleteLandmarkAction}
+              onSuccess={() => setOpen(false)}
+              onCancel={() => setOpen(false)}
             />
           )}
         </DialogContent>
