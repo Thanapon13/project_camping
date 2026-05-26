@@ -1,57 +1,32 @@
 "use client";
 
+import { useActionState } from "react";
 import { actionFunction } from "@/utils/types";
-import { useActionState, useEffect, useRef } from "react";
-import { toast } from "sonner";
-import Swal from "sweetalert2";
+import { useFormNotification } from "@/hooks/useformnotification";
 
 const initialState = {
   message: "",
   code: undefined as number | undefined,
 };
 
-const FormContainer = ({
-  className,
-  action,
-  children,
-  onSuccess,
-  onClick,
-}: {
-  className?: string;
+type FormContainerProps = {
   action: actionFunction;
   children: React.ReactNode;
+  className?: string;
   onSuccess?: () => void;
   onClick?: (e: React.MouseEvent) => void;
-}) => {
+};
+
+const FormContainer = ({
+  action,
+  children,
+  className,
+  onSuccess,
+  onClick,
+}: FormContainerProps) => {
   const [state, formAction] = useActionState(action, initialState);
-  const onSuccessRef = useRef(onSuccess);
 
-  useEffect(() => {
-    onSuccessRef.current = onSuccess;
-  }, [onSuccess]);
-
-  useEffect(() => {
-    if (!state.message) return;
-
-    if (state.code === 0) {
-      Swal.fire({
-        title: "สำเร็จ!",
-        text: state.message,
-        icon: "success",
-        timer: 2000,
-        showConfirmButton: false,
-        width: "600px",
-        padding: "3em",
-        timerProgressBar: true,
-      }).then(() => {
-        onSuccessRef.current?.();
-      });
-    } else if (state.code === 200) onSuccessRef.current?.();
-
-    if (state.code === 402) {
-      toast.error(state.message, { duration: 5000, position: "top-center" });
-    }
-  }, [state]);
+  useFormNotification(state, { onSuccess });
 
   return (
     <form action={formAction} className={className} onClick={onClick}>
