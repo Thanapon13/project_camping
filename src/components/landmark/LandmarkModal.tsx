@@ -12,7 +12,7 @@ import CreateLandmarkForm from "../landmark/CreateLandmarkForm";
 import useLandmark from "@/hooks/useLandmark";
 import { SignInButton } from "@clerk/nextjs";
 import DeleteConfirmationForm from "../form/DeleteConfirmationForm";
-import { deleteLandmarkAction } from "@/actions/action";
+import { deleteLandmarkAction } from "@/actions/landmark";
 
 const LandmarkModal = ({ userId }: { userId: String | null }) => {
   const { open, setOpen, modalMode, selectedCard, handleCreate } =

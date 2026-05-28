@@ -19,9 +19,6 @@ export type LandmarkCardProps = {
   image: string;
   category: string;
   province: string;
-  price: number;
-  lat?: number;
-  lng?: number;
   profileId: string;
   favoriteId: string | null;
 };

@@ -25,12 +25,16 @@ const SkeletonCard = () => {
   );
 };
 
-const LoadingCard = () => {
+type LoadingCardProps = {
+  count?: number;
+};
+
+const LoadingCard = ({ count = 8 }: LoadingCardProps) => {
   return (
     <section className="py-16 lg:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {Array.from({ length: 8 }).map((_, i) => (
+          {Array.from({ length: count }).map((_, i) => (
             <SkeletonCard key={i} />
           ))}
         </div>

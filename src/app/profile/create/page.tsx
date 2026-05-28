@@ -1,4 +1,4 @@
-import { createProfileAction } from "@/actions/action";
+import { createProfileAction } from "@/actions/auth";
 import { SubmitButton } from "@/components/buttons/Buttons";
 import FormContainer from "@/components/form/FormContainer";
 import FormInput from "@/components/form/FormInput";

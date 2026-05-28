@@ -1,22 +1,20 @@
 import { CommentProps } from "@/utils/types";
 import CommentCard from "./CommentCard";
 
-const CommentList = ({
-  comments,
-  userId,
-  userImage,
-}: {
+type CommentListProps = {
   comments: CommentProps[];
   userId: string | null;
   userImage: string | null;
-}) => {
-  if (comments.length === 0) {
-    return (
-      <p className="text-center text-muted-foreground py-8">
-        No comments yet. Be the first to comment!
-      </p>
-    );
-  }
+};
+
+const EmptyComments = () => (
+  <p className="text-center text-muted-foreground py-8">
+    No comments yet. Be the first to comment!
+  </p>
+);
+
+const CommentList = ({ comments, userId, userImage }: CommentListProps) => {
+  if (comments.length === 0) return <EmptyComments />;
 
   return (
     <div className="space-y-1">

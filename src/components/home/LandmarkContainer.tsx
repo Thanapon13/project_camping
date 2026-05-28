@@ -1,8 +1,8 @@
-import { fetchLandmarks } from "@/actions/action";
 import { auth } from "@clerk/nextjs/server";
 import Landmarklist from "./Landmarklist";
 import LandmarkHeader from "./LandmarkHeader";
 import CategoryFilter from "./CategoryFilter";
+import { fetchLandmarks } from "@/actions/landmark";
 
 const LandmarkContainer = async () => {
   const { userId } = await auth();

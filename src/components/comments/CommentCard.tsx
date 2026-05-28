@@ -3,14 +3,17 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { CommentProps } from "@/utils/types";
-import { Star } from "lucide-react";
 import ReplyForm from "./ReplyForm";
 import ReplyList from "./ReplyList";
 import { CommentButtonAction } from "./CommentButtonAction";
 import Avatar from "@/user/Avatar";
 import EditCommentForm from "./EditCommentForm";
-import { editCommentAction } from "@/actions/action";
+import { deleteCommentAction, editCommentAction } from "@/actions/action";
 import CommentInteractions from "./CommentInteractions";
+import DeleteCommentModal from "./DeleteCommentModal";
+import LandmarkRating from "../card/LandmarkRating";
+
+// --- Helpers ---
 
 const formatDate = (date: Date) =>
   new Intl.DateTimeFormat("en-US", {
@@ -19,26 +22,37 @@ const formatDate = (date: Date) =>
     day: "numeric",
   }).format(new Date(date));
 
+// --- Types ---
+
+type CommentCardProps = {
+  comment: CommentProps;
+  index: number;
+  totalCount: number;
+  userId: string | null;
+  userImage: string | null;
+};
+
+// --- Main Component ---
+
 const CommentCard = ({
   comment,
   index,
   totalCount,
   userId,
   userImage,
-}: {
-  comment: CommentProps;
-  index: number;
-  totalCount: number;
-  userId: string | null;
-  userImage: string | null;
-}) => {
+}: CommentCardProps) => {
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const isOwner = userId === comment.profileId;
+  const replyToName = `${comment.profile.firstName} ${comment.profile.lastName}`;
 
   const handleReplyClick = () => {
     if (!userId) return;
     setShowReplyForm(prev => !prev);
+    // เปิด replies อัตโนมัติเมื่อกด reply
     if (!showReplies && comment.replies.length > 0) setShowReplies(true);
   };
 
@@ -52,31 +66,19 @@ const CommentCard = ({
         <Avatar userImage={comment.profile.profileImage} />
 
         <div className="flex-1 min-w-0">
-          {/* Header */}
+          {/* Header ของ comment: ชื่อ, วันที่, rating */}
           <div className="flex items-center gap-2 mb-1">
             <span className="font-semibold text-sm">
               {comment.profile.firstName} {comment.profile.lastName}
             </span>
-
             <span className="text-xs text-muted-foreground">
               {formatDate(comment.createdAt)}
             </span>
 
-            <div className="flex items-center gap-0.5 ml-auto">
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  className={`w-3 h-3 ${
-                    i < comment.rating
-                      ? "fill-amber-400 text-amber-400"
-                      : "text-muted"
-                  }`}
-                />
-              ))}
-            </div>
+            <LandmarkRating rating={comment.rating} />
           </div>
 
-          {/* Comment Text OR Edit Form */}
+          {/* สลับระหว่าง edit form กับ comment text */}
           {isEditing ? (
             <EditCommentForm
               commentId={comment.id}
@@ -90,6 +92,7 @@ const CommentCard = ({
             </p>
           )}
 
+          {/* ปุ่ม like / reply / toggle replies */}
           {!isEditing && (
             <CommentInteractions
               comment={comment}
@@ -100,12 +103,12 @@ const CommentCard = ({
             />
           )}
 
-          {/* Reply Form */}
+          {/* Reply form — แสดงเมื่อกด reply */}
           {showReplyForm && userId && !isEditing && (
             <ReplyForm
               commentId={comment.id}
               landmarkId={comment.landmarkId}
-              replyToName={`${comment.profile.firstName} ${comment.profile.lastName}`}
+              replyToName={replyToName}
               onSuccess={() => {
                 setShowReplyForm(false);
                 setShowReplies(true);
@@ -114,26 +117,34 @@ const CommentCard = ({
               userImage={userImage}
             />
           )}
-          {/* Replies List */}
+
+          {/* Replies list — แสดงเมื่อ toggle */}
           {showReplies && comment.replies.length > 0 && (
             <ReplyList replies={comment.replies} formatDate={formatDate} />
           )}
         </div>
 
-        {/* More Options */}
-        {userId === comment.profileId && !isEditing && (
+        {/* ปุ่ม edit/delete — แสดงเฉพาะเจ้าของ comment */}
+        {isOwner && !isEditing && (
           <CommentButtonAction
             onEdit={() => setIsEditing(true)}
-            onDelete={() => {
-              console.log("ต้องการลบคอมเมนต์ ID:", comment.id);
-            }}
+            onDelete={() => setShowDeleteModal(true)}
           />
         )}
       </div>
 
+      {/* divider ระหว่าง comment ยกเว้นอันสุดท้าย */}
       {index < totalCount - 1 && (
         <div className="border-b border-border/50 mx-4" />
       )}
+
+      {/* Modal ยืนยันการลบ comment */}
+      <DeleteCommentModal
+        commentId={comment.id}
+        open={showDeleteModal}
+        onOpenChange={setShowDeleteModal}
+        action={deleteCommentAction}
+      />
     </motion.div>
   );
 };

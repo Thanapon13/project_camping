@@ -8,11 +8,11 @@ import SelectField from "../form/SelectField";
 import TextAreaInput from "../form/TextAreaInput";
 import ImageInput from "../form/ImageInput";
 import MapLandmarkClient from "../map/MapLandmarkClient";
-import { createLandmarkAction, editLandmarkAction } from "@/actions/action";
 import { SubmitButton } from "../buttons/Buttons";
 import { useState } from "react";
 import { LandmarkCardProps } from "@/utils/types";
 import FieldError from "../error/FieldError";
+import { createLandmarkAction, editLandmarkAction } from "@/actions/landmark";
 
 interface CreateLandmarkFormProps {
   onSuccess?: () => void;

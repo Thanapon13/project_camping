@@ -77,7 +77,7 @@ const ImageContainer = ({
         >
           <Button
             variant="secondary"
-            className="bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg gap-2"
+            className="bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg gap-2 dark:bg-zinc-800/90"
             onClick={() => setIsLightboxOpen(true)}
           >
             <Camera className="w-4 h-4" />

@@ -1,5 +1,3 @@
-"use client";
-
 import { useActionState } from "react";
 import { actionFunction } from "@/utils/types";
 import { useFormNotification } from "@/hooks/useformnotification";
