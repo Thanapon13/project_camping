@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { FromPageType, LandmarkCardProps } from "@/utils/types";

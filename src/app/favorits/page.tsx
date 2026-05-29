@@ -1,4 +1,4 @@
-import { fetchFavorits } from "@/actions/action";
+import { fetchFavorits } from "@/actions/favorite";
 import LoadingCard from "@/components/card/LoadingCard";
 import Landmarklist from "@/components/home/Landmarklist";
 import { auth } from "@clerk/nextjs/server";

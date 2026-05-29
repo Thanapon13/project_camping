@@ -5,6 +5,8 @@ import Navbar from "@/components/navbar/Navbar";
 import Providers from "./Providers";
 import { ClerkProvider } from "@clerk/nextjs";
 import Footer from "@/components/footer/Footer";
+import { currentUser } from "@clerk/nextjs/server";
+import IncomingChatListener from "@/components/messages/IncomingChatListener";
 
 const geistSans = Geist({
   subsets: ["latin"],
@@ -39,11 +41,15 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await currentUser();
+  const userId = user?.id ?? null;
+  const userImage = user?.imageUrl ?? null;
+
   return (
     <ClerkProvider>
       <html lang="en" className="bg-background" suppressHydrationWarning>
@@ -51,9 +57,10 @@ export default function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
         >
           <Providers>
-            <Navbar />
+            <Navbar userImage={userImage} />
             <main className="px-8 mx-auto">{children}</main>
             <Footer />
+            {userId && <IncomingChatListener currentUserId={userId} />}
           </Providers>
         </body>
       </html>

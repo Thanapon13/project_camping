@@ -1,4 +1,4 @@
-import { fetchComments } from "@/actions/action";
+import { fetchComments } from "@/actions/comment";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import CommentContainer from "./CommentContainer";
 

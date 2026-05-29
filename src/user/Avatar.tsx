@@ -1,14 +1,22 @@
 import Image from "next/image";
 
-const Avatar = ({ userImage }: { userImage: string | null }) => {
+type AvatarProps = {
+  userImage: string | null;
+  size?: number;
+};
+
+const Avatar = ({ userImage, size = 40 }: AvatarProps) => {
   return (
-    <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 ring-2 ring-border">
+    <div
+      className="rounded-full overflow-hidden shrink-0 ring-2 ring-border"
+      style={{ width: size, height: size }}
+    >
       {userImage ? (
         <Image
           src={userImage}
           alt="Avatar"
-          width={40}
-          height={40}
+          width={size}
+          height={size}
           className="object-cover w-full h-full"
         />
       ) : (
@@ -19,4 +27,5 @@ const Avatar = ({ userImage }: { userImage: string | null }) => {
     </div>
   );
 };
+
 export default Avatar;

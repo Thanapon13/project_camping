@@ -1,7 +1,7 @@
 // FavoriteToggleForm.tsx
 "use client";
 
-import { toggleFavoriteAction } from "@/actions/action";
+import { toggleFavoriteAction } from "@/actions/favorite";
 import { FavoriteButton } from "../buttons/Buttons";
 import FormContainer from "../form/FormContainer";
 import { usePathname } from "next/navigation";

@@ -1,53 +1,36 @@
-import { createProfileAction } from "@/actions/auth";
-import { SubmitButton } from "@/components/buttons/Buttons";
-import FormContainer from "@/components/form/FormContainer";
-import FormInput from "@/components/form/FormInput";
-import { currentUser } from "@clerk/nextjs/server";
+import { clerkClient, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import db from "@/utils/db";
 
 const CreateProfile = async () => {
   const user = await currentUser();
 
-  // if (user?.privateMetadata.hasProfile) redirect("/");/
+  if (!user) redirect("/");
 
-  return (
-    <section>
-      <h1 className="text-2xl font-semibold mb-8 capitalize">new user</h1>
+  if (user.privateMetadata.hasProfile) redirect("/");
 
-      <div className="border p-8 rounded-md">
-        <FormContainer action={createProfileAction}>
-          <div>
-            <FormInput
-              name="firstName"
-              type="text"
-              label="First Name"
-              placeholder="First Name"
-            />
+  const userName =
+    user.username ??
+    user.emailAddresses[0]?.emailAddress.split("@")[0] ??
+    user.id;
 
-            <FormInput
-              name="lastName"
-              type="text"
-              label="Last Name"
-              placeholder="Last Name"
-            />
+  await db.profile.create({
+    data: {
+      clerkId: user.id,
+      firstName: user.firstName ?? "",
+      lastName: user.lastName ?? "",
+      userName,
+      email: user.emailAddresses[0]?.emailAddress ?? "",
+      profileImage: user.imageUrl,
+    },
+  });
 
-            <FormInput
-              name="userName"
-              type="text"
-              label="User Name"
-              placeholder="User Name"
-            />
-          </div>
+  const client = await clerkClient();
+  await client.users.updateUserMetadata(user.id, {
+    privateMetadata: { hasProfile: true },
+  });
 
-          <SubmitButton
-            text="Create Profile"
-            size="sm"
-            className="mt-10"
-            pendingText="Please wait..."
-          />
-        </FormContainer>
-      </div>
-    </section>
-  );
+  redirect("/");
 };
+
 export default CreateProfile;

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Star } from "lucide-react";
 import FormContainer from "../form/FormContainer";
-import { createCommentAction } from "@/actions/action";
+import { createCommentAction } from "@/actions/comment";
 import TextAreaInput from "../form/TextAreaInput";
 import { SubmitButton } from "../buttons/Buttons";
 import Avatar from "@/user/Avatar";

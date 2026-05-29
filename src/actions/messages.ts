@@ -47,7 +47,7 @@ export const fetchMessages = async (conversationId: string) => {
   }
 };
 
-// 3. ส่งข้อความใหม่เข้า DB
+// 3. ส่งข้อความใหม่เข้า DB + broadcast ผ่าน Supabase Realtime
 export const sendMessageAction = async (
   conversationId: string,
   content: string,
@@ -68,9 +68,90 @@ export const sendMessageAction = async (
       data: { updatedAt: new Date() },
     });
 
+    const payload = {
+      id: message.id,
+      content: message.content,
+      senderId: message.senderId,
+      conversationId: message.conversationId,
+      createdAt: message.createdAt.toISOString(),
+      isRead: message.isRead,
+    };
+
+    // Broadcast ให้ทั้งสองฝ่ายในห้องแชทเห็น message ใหม่
+    await broadcastToChannel(`conversation:${conversationId}`, "new-message", payload);
+
+    // Broadcast ไปยัง receiver โดยตรง เพื่อเปิด IncomingChatListener popup
+    const conversation = await db.conversation.findUnique({
+      where: { id: conversationId },
+      select: { userAId: true, userBId: true },
+    });
+
+    if (conversation) {
+      const receiverId =
+        conversation.userAId === user.id
+          ? conversation.userBId
+          : conversation.userAId;
+      await broadcastToChannel(`user:${receiverId}`, "incoming-message", payload);
+    }
+
     return { code: 200, message };
   } catch (error) {
     return { code: 400, message: "Failed to send message" };
+  }
+};
+
+async function broadcastToChannel(
+  topic: string,
+  event: string,
+  payload: object,
+) {
+  const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/realtime/v1/api/broadcast`;
+  const key = process.env.SUPABASE_KEY as string;
+
+  await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${key}`,
+      apikey: key,
+    },
+    body: JSON.stringify({ messages: [{ topic, event, payload }] }),
+  });
+}
+
+export const markMessagesAsRead = async (conversationId: string) => {
+  try {
+    const user = await getAuthUser();
+    await db.message.updateMany({
+      where: {
+        conversationId,
+        senderId: { not: user.id },
+        isRead: false,
+      },
+      data: { isRead: true },
+    });
+    // แจ้งฝั่งผู้ส่งว่าอ่านแล้ว
+    await broadcastToChannel(`conversation:${conversationId}`, "messages-read", {
+      readBy: user.id,
+    });
+  } catch {
+    // ไม่ block UI ถ้า mark อ่านไม่สำเร็จ
+  }
+};
+
+export const getProfileByClerkId = async (clerkId: string) => {
+  try {
+    return await db.profile.findUnique({
+      where: { clerkId },
+      select: {
+        clerkId: true,
+        firstName: true,
+        lastName: true,
+        profileImage: true,
+      },
+    });
+  } catch {
+    return null;
   }
 };
 

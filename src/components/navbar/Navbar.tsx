@@ -1,18 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DarkMode } from "./DarkMode";
 import DropdownListMenu from "./DropdownListMenu";
-import links from "@/utils/links";
 
 import Logo from "./Logo";
 import MobileMenu from "./MobileMenu";
 
-const Navbar = () => {
+const Navbar = ({ userImage }: { userImage: string | null }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -42,7 +40,7 @@ const Navbar = () => {
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-3">
             <DarkMode />
-            <DropdownListMenu />
+            <DropdownListMenu userImage={userImage} />
           </div>
 
           {/* Mobile Menu Button */}

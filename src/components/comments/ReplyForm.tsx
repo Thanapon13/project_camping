@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import FormContainer from "../form/FormContainer";
-import { createReplyAction } from "@/actions/action";
+import { createReplyAction } from "@/actions/comment";
 import { SubmitButton } from "../buttons/Buttons";
 import Avatar from "@/user/Avatar";
 

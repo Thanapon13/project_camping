@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Home, MapPin, Heart } from "lucide-react";
+import { Home, MapPin, Heart, User } from "lucide-react";
 
 interface BreadcrumbsProps {
   name: string;
@@ -18,10 +18,14 @@ interface BreadcrumbsProps {
 }
 
 function Breadcrumbs({ name, fromPage }: BreadcrumbsProps) {
-  const backUrl = fromPage === "home" ? "/" : "/favorits";
-  const backLabel = fromPage === "home" ? "Home" : "Favorites";
+  const config = {
+    home:     { url: "/",        label: "Home",     icon: Home },
+    favorites: { url: "/favorits", label: "Favorites", icon: Heart },
+    profile:  { url: "/profile", label: "Profile",  icon: User },
+  };
 
-  const BackIcon = fromPage === "home" ? Home : Heart;
+  const { url: backUrl, label: backLabel, icon: BackIcon } =
+    config[fromPage as keyof typeof config] ?? config.home;
 
   return (
     <motion.nav

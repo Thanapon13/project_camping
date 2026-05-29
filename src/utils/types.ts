@@ -51,4 +51,4 @@ export type CommentProps = {
   replies: ReplyProps[]; // ← เพิ่มตรงนี้
 };
 
-export type FromPageType = "home" | "favorites";
+export type FromPageType = "home" | "favorites" | "profile";

@@ -12,19 +12,31 @@ import links from "@/utils/links";
 import { Button } from "../ui/button";
 import SignOutLinks from "./SignOutLinks";
 import { Show, SignInButton, SignUpButton } from "@clerk/nextjs";
+import Avatar from "@/user/Avatar";
 
-const DropdownListMenu = () => {
+type DropdownListMenuProps = {
+  userImage: string | null;
+};
+
+const DropdownListMenu = ({ userImage }: DropdownListMenuProps) => {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <Button>
+        <Button
+          variant="outline"
+          className="flex items-center gap-2 rounded-full px-3"
+        >
           <TextAlignJustify className="h-4 w-4" />
-          <UserIcon />
+          {userImage ? (
+            <Avatar userImage={userImage} size={30} />
+          ) : (
+            <UserIcon />
+          )}
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent>
-        {/* Log Out : ให้แสดง */}
+      <DropdownMenuContent align="end">
+        {/* ยังไม่ได้ login */}
         <Show when="signed-out">
           <DropdownMenuItem>
             <SignInButton mode="modal">
@@ -39,7 +51,7 @@ const DropdownListMenu = () => {
           </DropdownMenuItem>
         </Show>
 
-        {/* Log In : ให้แสดง*/}
+        {/* login แล้ว */}
         <Show when="signed-in">
           {links.map((el, idx) => (
             <DropdownMenuItem key={idx} asChild className="cursor-pointer">
@@ -47,7 +59,6 @@ const DropdownListMenu = () => {
             </DropdownMenuItem>
           ))}
           <DropdownMenuSeparator />
-
           <DropdownMenuItem>
             <SignOutLinks />
           </DropdownMenuItem>
@@ -56,4 +67,5 @@ const DropdownListMenu = () => {
     </DropdownMenu>
   );
 };
+
 export default DropdownListMenu;
