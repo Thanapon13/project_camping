@@ -1,45 +1,44 @@
-
-<!-- CLAUDE.md -->
-
 # Project Overview
 
-โปรเจกต์นี้คือระบบ social media สร้างด้วย Next.js , TypeScript , Tailwind CSS , Prisma , Supabase และ Postgresql
+โปรเจกต์นี้คือระบบ Social Media และแพลตฟอร์มเกี่ยวกับ Camping สร้างด้วย Next.js 16 (App Router), TypeScript, Tailwind CSS v4, Prisma 7 และเลือกใช้ Supabase (PostgreSQL) เป็น Database
 
 # Tech Stack
 
-- Next.js App Router
-- TypeScript
-- Tailwind CSS
-- Prisma
-- Supabase
-- Postgresql
+- **Framework:** Next.js 16 (App Router) & React 19 (พร้อม React Compiler)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS v4, Framer Motion, Shadcn UI
+- **Auth:** Clerk Authentication
+- **Database & ORM:** Prisma 7 + PostgreSQL (Supabase)
+- **Validation:** Zod
+- **Other Features:** Leaflet (Maps)
 
 # Folder Structure
 
-- src/app/ ใช้เก็บ route และ page
-- src/components/ ใช้เก็บ reusable components
-- src/lib/ ใช้เก็บ helper function และ database client
-- prisma/ ใช้เก็บ schema และ migration
+- `src/app/` - ใช้เก็บ route, page และ server actions
+- `src/components/` - ใช้เก็บ reusable components และ UI elements (Shadcn)
+- `src/lib/` - ใช้เก็บ helper functions, validation schemas (Zod) และ database client
+- `prisma/` - ใช้เก็บ schema.prisma และ database migration
 
 # Coding Rules
 
-- ใช้ TypeScript ทุกไฟล์
-- หลีกเลี่ยง any ถ้าไม่จำเป็น
-- แยก components ให้เล็กและอ่านง่าย
-- ห้ามลบโค้ดเดิมถ้าไม่เข้าใจหน้าที่ของมัน
+- ใช้ **TypeScript** ทุกไฟล์ และระบุ Type ให้ชัดเจน **หลีกเลี่ยงการใช้ `any`**
+- แยก Components ให้เป็นชิ้นเล็ก เล็ก เล็ก และอ่านง่าย (Clean Code)
+- การทำ Form Validation หรือ API Validation ต้องใช้ **Zod** เสมอ
+- ห้ามลบหรือแก้ไขโค้ดเดิมในส่วนที่ไม่มั่นใจ ถ้าไม่เข้าใจหน้าที่ของมันให้ถามก่อน
+- รองรับ Responsive Design (Mobile-First) เสมอด้วย Tailwind CSS
 
 # Commands
 
-- pnpm run dev สำหรับรันโปรเจกต์
-- pnpm run build สำหรับตราจ production build
-- npx prima studio สำหรับเปิด database UI
-- npx prisma migrate dev สำหรับรัน migration
+- `pnpm run dev` - สำหรับรันโปรเจกต์ในโหมด Development
+- `pnpm run build` - สำหรับตรวจ production build และเช็ค Type
+- `pnpm exec prisma studio` - สำหรับเปิด Database UI
+- `pnpm exec prisma migrate dev` - สำหรับรันและสร้าง database migration
 
 # Workflow
 
-ก่อนแก้โด้คให้ทำตามนี้:
+ก่อนเริ่มแก้ไขโค้ดทุกครั้งให้ทำตามขั้นตอนนี้:
 
-1. อ่านไฟล์ที่เกี่ยวข้องก่อน
-2. อธิบายแผนการแก้แบบสั้นๆ
-3. ตรวจว่่าโค้ดไม่กระทบส่วนอื่น
-4. สรุปสิ่งที่แก้หลังทำเสร็จ
+1. อ่านและทำความเข้าใจไฟล์ที่เกี่ยวข้องทั้งหมดก่อน
+2. อธิบายแผนการแก้ไขให้กระชับและชัดเจน (Brief Plan)
+3. ตรวจสอบให้มั่นใจว่าโค้ดที่แก้จะไม่กระทบ (Breaking Change) กับส่วนอื่น
+4. สรุปสิ่งที่แก้ไขและผลลัพธ์หลังทำเสร็จ
