@@ -24,6 +24,7 @@ type ChatPopupProps = {
   host: Host;
   currentUserId: string;
   onClose: () => void;
+  isEmbedded?: boolean;
 };
 
 const formatTime = (date: Date) =>
@@ -48,7 +49,12 @@ const MOCK_MESSAGES: Message[] = [
   },
 ];
 
-const ChatPopup = ({ host, currentUserId, onClose }: ChatPopupProps) => {
+const ChatPopup = ({
+  host,
+  currentUserId,
+  onClose,
+  isEmbedded = false,
+}: ChatPopupProps) => {
   const [messages, setMessages] = useState<Message[]>(MOCK_MESSAGES);
   const [value, setValue] = useState("");
   const [isMinimized, setIsMinimized] = useState(false);
@@ -162,7 +168,9 @@ const ChatPopup = ({ host, currentUserId, onClose }: ChatPopupProps) => {
                       >
                         {msg.content}
                       </div>
-                      <p className={`text-[10px] text-muted-foreground ${isOwn ? "text-right" : "text-left"}`}>
+                      <p
+                        className={`text-[10px] text-muted-foreground ${isOwn ? "text-right" : "text-left"}`}
+                      >
                         {formatTime(msg.createdAt)}
                       </p>
                     </div>
