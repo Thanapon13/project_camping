@@ -4,7 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/navbar/Navbar";
 import Providers from "./Providers";
 import { ClerkProvider } from "@clerk/nextjs";
-import Footer from "@/components/footer/Footer";
+import Footer from "@/components/Footer/Footer";
 import { currentUser } from "@clerk/nextjs/server";
 import IncomingChatListener from "@/components/messages/IncomingChatListener";
 
