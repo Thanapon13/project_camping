@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
 import db from "@/utils/db";
 import { getAuthUser } from "./auth";
 import { renderError } from "./error";
@@ -24,6 +24,7 @@ export const toggleFavoriteAction = async (prevState: {
       });
     }
 
+    revalidateTag(`favorites-${user.id}`, "default");
     revalidatePath(pathname);
     return {
       code: 200,
@@ -51,27 +52,33 @@ export const fetchFavoriteId = async ({
 
 export const fetchFavorits = async () => {
   const user = await getAuthUser();
+  return fetchFavoritsDB(user.id);
+};
 
-  const favorites = await db.favorite.findMany({
-    where: { profileId: user.id },
-    select: {
-      id: true,
-      landmark: {
+async function fetchFavoritsDB(userId: string) {
+  const fn = unstable_cache(
+    async () => {
+      const favorites = await db.favorite.findMany({
+        where: { profileId: userId },
         select: {
           id: true,
-          name: true,
-          description: true,
-          image: true,
-          province: true,
-          category: true,
-          profileId: true,
+          landmark: {
+            select: {
+              id: true,
+              name: true,
+              description: true,
+              image: true,
+              province: true,
+              category: true,
+              profileId: true,
+            },
+          },
         },
-      },
+      });
+      return favorites.map(f => ({ ...f.landmark, favoriteId: f.id }));
     },
-  });
-
-  return favorites.map(f => ({
-    ...f.landmark,
-    favoriteId: f.id,
-  }));
-};
+    [`favorites-${userId}`],
+    { tags: [`favorites-${userId}`], revalidate: false },
+  );
+  return fn();
+}

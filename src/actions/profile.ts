@@ -2,7 +2,7 @@
 
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
 import db from "@/utils/db";
 import { renderError } from "./error";
 
@@ -38,6 +38,8 @@ export const updateProfileAction = async (
     });
 
     revalidatePath("/profile");
+    revalidateTag(`user-landmarks-${user.id}`, "default");
+    revalidateTag("landmarks", "default");
     return { message: "Profile updated successfully", code: 200 };
   } catch (error) {
     return renderError(error, 400);
@@ -47,9 +49,19 @@ export const updateProfileAction = async (
 export const fetchUserLandmarks = async () => {
   const user = await currentUser();
   if (!user) return [];
+  return fetchUserLandmarksDB(user.id);
+};
 
-  return db.landmark.findMany({
-    where: { profileId: user.id },
-    orderBy: { createdAt: "desc" },
-  });
+async function fetchUserLandmarksDB(userId: string) {
+  const fn = unstable_cache(
+    async () => {
+      return db.landmark.findMany({
+        where: { profileId: userId },
+        orderBy: { createdAt: "desc" },
+      });
+    },
+    [`user-landmarks-${userId}`],
+    { tags: [`user-landmarks-${userId}`, "landmarks"], revalidate: 3600 },
+  );
+  return fn();
 };

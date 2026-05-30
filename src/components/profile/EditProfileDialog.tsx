@@ -25,7 +25,7 @@ const EditProfileDialog = ({ profile }: { profile: Profile }) => {
   const [open, setOpen] = useState(false);
   const [state, formAction, pending] = useActionState(updateProfileAction, {
     message: "",
-    code: undefined as number | undefined,
+    code: 0,
   });
 
   useFormNotification(state, {

@@ -15,7 +15,7 @@ type LandmarklistProps = {
   infiniteScroll?: boolean;
 };
 
-const SKELETON_COUNT = 4;
+const SKELETON_COUNT = 8;
 
 const Landmarklist = ({
   initialLandmarks,

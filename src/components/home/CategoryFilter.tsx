@@ -16,7 +16,6 @@ const allCategories = [
 
 const CategoryFilter = ({ onCategoryChange }: CategoryFilterProps) => {
   const [activeCategory, setActiveCategory] = useState("all");
-  console.log("activeCategory", activeCategory);
 
   const handleCategoryClick = (categoryId: string) => {
     setActiveCategory(categoryId);

@@ -11,25 +11,28 @@ import HostInfo from "@/components/landmark/HostInfo.tsx";
 import CommentSkeleton from "@/components/comments/Commentskeleton";
 import CommentContainerWrapper from "@/components/comments/Commentcontainerwrapper";
 import { fetchLandmarkDetail } from "@/actions/landmark";
+import { fetchFavoriteId } from "@/actions/favorite";
 
 const LandmarkDetailPage = async ({
   params,
   searchParams,
 }: {
   params: { id: string };
-  searchParams: { from?: string; favoriteId?: string };
+  searchParams: { from?: string };
 }) => {
   const { userId } = await auth();
   const { id } = await params;
   const resolvedSearchParams = await searchParams;
 
-  const landmark = await fetchLandmarkDetail({ id });
+  const [landmark, favoriteId] = await Promise.all([
+    fetchLandmarkDetail({ id }),
+    userId ? fetchFavoriteId({ landmarkId: id }) : Promise.resolve(null),
+  ]);
 
   if (!landmark) redirect("/");
 
   const { name, description, image, province, category, lat, lng } = landmark;
   const fromPage = resolvedSearchParams.from || "home";
-  const favoriteId = resolvedSearchParams.favoriteId || null;
 
   return (
     <main className="min-h-screen bg-background">

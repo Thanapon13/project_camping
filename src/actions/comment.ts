@@ -1,7 +1,7 @@
 "use server";
 
 import { currentUser } from "@clerk/nextjs/server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
 import db from "@/utils/db";
 import { validateComment, validateWithZod } from "@/utils/schemas";
 import { renderError } from "./error";
@@ -29,6 +29,7 @@ export const createCommentAction = async (
       },
     });
 
+    revalidateTag(`comments-${validatedComment.landmarkId}`, "default");
     revalidatePath(`/landmark/${validatedComment.landmarkId}`);
     return { message: "Comment posted successfully!", code: 200 };
   } catch (err) {
@@ -36,25 +37,32 @@ export const createCommentAction = async (
   }
 };
 
-export const fetchComments = async ({ landmarkId }: { landmarkId: string }) => {
-  return db.comment.findMany({
-    where: { landmarkId, parentId: null },
-    include: {
-      profile: {
-        select: { firstName: true, lastName: true, profileImage: true },
-      },
-      replies: {
+export async function fetchComments({ landmarkId }: { landmarkId: string }) {
+  const fn = unstable_cache(
+    async () => {
+      return db.comment.findMany({
+        where: { landmarkId, parentId: null },
         include: {
           profile: {
             select: { firstName: true, lastName: true, profileImage: true },
           },
+          replies: {
+            include: {
+              profile: {
+                select: { firstName: true, lastName: true, profileImage: true },
+              },
+            },
+            orderBy: { createdAt: "asc" },
+          },
         },
-        orderBy: { createdAt: "asc" },
-      },
+        orderBy: { createdAt: "desc" },
+      });
     },
-    orderBy: { createdAt: "desc" },
-  });
-};
+    [`comments-${landmarkId}`],
+    { tags: [`comments-${landmarkId}`], revalidate: 300 },
+  );
+  return fn();
+}
 
 export const createReplyAction = async (
   prevState: unknown,
@@ -85,6 +93,7 @@ export const createReplyAction = async (
       },
     });
 
+    revalidateTag(`comments-${landmarkId}`, "default");
     revalidatePath(`/landmark/${landmarkId}`);
     return { message: "Reply posted successfully!", code: 200 };
   } catch (err) {
@@ -110,6 +119,7 @@ export const editCommentAction = async (
       data: { comment: newComment },
     });
 
+    revalidateTag(`comments-${updatedComment.landmarkId}`, "default");
     revalidatePath(`/landmark/${updatedComment.landmarkId}`);
     return { message: "แก้ไขคอมเมนต์สำเร็จ!", code: 200 };
   } catch (err) {
@@ -131,6 +141,7 @@ export const deleteCommentAction = async (
       where: { id, profileId: user.id },
     });
 
+    revalidateTag(`comments-${deletedComment.landmarkId}`, "default");
     revalidatePath(`/landmark/${deletedComment.landmarkId}`);
     return { code: 200, message: "ลบคอมเมนต์สำเร็จ" };
   } catch (err) {

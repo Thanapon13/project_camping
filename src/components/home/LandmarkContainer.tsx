@@ -12,6 +12,12 @@ const LandmarkContainer = async () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <LandmarkHeader userId={userId} />
         <Landmarklist
+          key={initialLandmarks
+            .map(
+              l =>
+                `${l.id}|${l.name}|${l.category}|${l.province}|${l.image.slice(-30)}`,
+            )
+            .join(";")}
           initialLandmarks={initialLandmarks}
           userId={userId}
           infiniteScroll={false}

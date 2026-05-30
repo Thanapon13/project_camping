@@ -4,8 +4,47 @@ import db from "@/utils/db";
 import { getAuthUser } from "./auth";
 import { imageSchema, landmarkSchema, validateWithZod } from "@/utils/schemas";
 import { uploadFile } from "@/utils/supabase";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
 import { renderError } from "./error";
+
+// --- Cached DB Queries (unstable_cache — persists across requests) ---
+
+const fetchLandmarksDB = unstable_cache(
+  async (page: number, limit: number, category: string) => {
+    const skip = (page - 1) * limit;
+    return db.landmark.findMany({
+      skip,
+      take: limit,
+      where: category !== "all" ? { category } : undefined,
+      select: {
+        id: true,
+        name: true,
+        image: true,
+        description: true,
+        province: true,
+        category: true,
+        profileId: true,
+        price: true,
+      },
+      orderBy: { updatedAt: "desc" },
+    });
+  },
+  ["landmarks-list"],
+  { tags: ["landmarks"], revalidate: 3600 },
+);
+
+const fetchLandmarkDetailDB = unstable_cache(
+  async (id: string) => {
+    return db.landmark.findUnique({
+      where: { id },
+      include: { profile: true },
+    });
+  },
+  ["landmark-detail"],
+  { tags: ["landmarks"], revalidate: 3600 },
+);
+
+// --- Mutations ---
 
 export const createLandmarkAction = async (
   prevState: any,
@@ -24,14 +63,11 @@ export const createLandmarkAction = async (
 
     const file = formData.get("image") as File;
 
-    // Step1 : Validate rawData
     const validatedFile = validateWithZod(imageSchema, { image: file });
     const validatedField = validateWithZod(landmarkSchema, rawData);
 
-    // Step2 : Upload  Image to Supabase
     const fullPath = await uploadFile(validatedFile.image);
 
-    // Step3 : Inser to DB
     await db.landmark.create({
       data: {
         ...validatedField,
@@ -40,6 +76,7 @@ export const createLandmarkAction = async (
       },
     });
 
+    revalidateTag("landmarks", "default");
     revalidatePath("/");
     return { code: 0, message: "create Landmark Success!!!" };
   } catch (error) {
@@ -83,7 +120,9 @@ export const editLandmarkAction = async (
       },
     });
 
+    revalidateTag("landmarks", "default");
     revalidatePath("/");
+    revalidatePath(`/landmark/${id}`);
     return { code: 0, message: "Update Landmark Success!!!" };
   } catch (error) {
     return renderError(error, 402);
@@ -103,12 +142,10 @@ export const deleteLandmarkAction = async (
     }
 
     await db.landmark.delete({
-      where: {
-        id: id,
-        profileId: user.id,
-      },
+      where: { id, profileId: user.id },
     });
 
+    revalidateTag("landmarks", "default");
     revalidatePath("/");
 
     return {
@@ -119,6 +156,8 @@ export const deleteLandmarkAction = async (
     return renderError(err, 402);
   }
 };
+
+// --- Reads ---
 
 export const fetchLandmarks = async ({
   page = 1,
@@ -131,28 +170,14 @@ export const fetchLandmarks = async ({
   userId?: string | null;
   category?: string;
 } = {}) => {
-  const skip = (page - 1) * limit;
-
-  const landmarks = await db.landmark.findMany({
-    skip,
-    take: limit,
-    where: category !== "all" ? { category } : undefined,
-    select: {
-      id: true,
-      name: true,
-      image: true,
-      description: true,
-      province: true,
-      category: true,
-      profileId: true,
-    },
-    orderBy: { updatedAt: "desc" },
-  });
+  // Landmark list is cached (user-independent)
+  const landmarks = await fetchLandmarksDB(page, limit, category);
 
   if (!userId) {
     return landmarks.map(l => ({ ...l, favoriteId: null }));
   }
 
+  // Favorites are user-specific — fetched fresh per request
   const favorites = await db.favorite.findMany({
     where: {
       profileId: userId,
@@ -170,12 +195,5 @@ export const fetchLandmarks = async ({
 };
 
 export const fetchLandmarkDetail = async ({ id }: { id: string }) => {
-  return db.landmark.findUnique({
-    where: {
-      id,
-    },
-    include: {
-      profile: true,
-    },
-  });
+  return fetchLandmarkDetailDB(id);
 };
