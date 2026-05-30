@@ -159,22 +159,39 @@ export const fetchMyConversations = async () => {
   try {
     const user = await getAuthUser();
 
-    const conversations = await db.conversation.findMany({
-      where: {
-        OR: [{ userAId: user.id }, { userBId: user.id }],
-      },
-      include: {
-        // ดึงข้อความล่าสุด 1 ข้อความมาพรีวิวในหน้ากล่องข้อความ
-        messages: {
-          orderBy: { createdAt: "desc" },
-          take: 1,
+    const [conversations, unreadCounts] = await Promise.all([
+      db.conversation.findMany({
+        where: { OR: [{ userAId: user.id }, { userBId: user.id }] },
+        include: {
+          messages: {
+            orderBy: { createdAt: "desc" },
+            take: 1,
+            select: { content: true, createdAt: true, senderId: true },
+          },
+          userA: {
+            select: { clerkId: true, firstName: true, lastName: true, profileImage: true },
+          },
+          userB: {
+            select: { clerkId: true, firstName: true, lastName: true, profileImage: true },
+          },
         },
-        // TODO: หากมี Relation ไปยัง Profile สามารถ include เพื่อดึงชื่อและรูปของอีกฝ่ายมาแสดงผลได้ที่นี่
-      },
-      orderBy: { updatedAt: "desc" }, // เอาห้องที่มีความเคลื่อนไหวล่าสุดขึ้นก่อน
-    });
+        orderBy: { updatedAt: "desc" },
+      }),
+      db.message.groupBy({
+        by: ["conversationId"],
+        where: { isRead: false, senderId: { not: user.id } },
+        _count: { id: true },
+      }),
+    ]);
 
-    return conversations;
+    const unreadMap = Object.fromEntries(
+      unreadCounts.map(u => [u.conversationId, u._count.id]),
+    );
+
+    return conversations.map(conv => ({
+      ...conv,
+      unreadCount: unreadMap[conv.id] ?? 0,
+    }));
   } catch (error) {
     console.error(error);
     return [];

@@ -11,6 +11,7 @@ type ChatMessageListProps = {
   currentUserId: string;
   isOtherTyping: boolean;
   bottomRef: RefObject<HTMLDivElement | null>;
+  className?: string;
 };
 
 const ChatMessageList = ({
@@ -19,17 +20,18 @@ const ChatMessageList = ({
   currentUserId,
   isOtherTyping,
   bottomRef,
+  className = "h-72",
 }: ChatMessageListProps) => {
   if (loading) {
     return (
-      <div className="h-72 flex items-center justify-center">
+      <div className={`${className} flex items-center justify-center`}>
         <p className="text-xs text-muted-foreground">Loading...</p>
       </div>
     );
   }
 
   return (
-    <div className="h-72 overflow-y-auto px-3 py-3 space-y-2.5">
+    <div className={`${className} overflow-y-auto px-3 py-3 space-y-2.5`}>
       {messages.length === 0 && (
         <p className="text-xs text-muted-foreground text-center py-8">
           No messages yet. Say hi!

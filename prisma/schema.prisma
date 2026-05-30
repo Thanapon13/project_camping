@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -25,6 +20,9 @@ model Profile {
   landmarks    Landmark[]
   favorites    Favorite[]
   comments     Comment[]
+  conversationsAsA Conversation[] @relation("ConversationUserA")
+  conversationsAsB Conversation[] @relation("ConversationUserB")
+  sentMessages     Message[]      @relation("MessageSender")
 }
 
 model Landmark {
@@ -43,50 +41,53 @@ model Landmark {
   profileId   String
   favorites   Favorite[]
   comments    Comment[]
+
+  @@index([updatedAt(sort: Desc)])
+  @@index([profileId])
 }
 
 model Favorite {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  profile   Profile @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
-  profileId String
-
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  profile    Profile  @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
+  profileId  String
   landmark   Landmark @relation(fields: [landmarkId], references: [id], onDelete: Cascade)
   landmarkId String
+
+  @@index([profileId])
+  @@index([landmarkId])
 }
 
 model Comment {
-  id        String   @id @default(uuid())
-  comment   String
-  rating    Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  profile   Profile @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
-  profileId String
-
-  landmark   Landmark @relation(fields: [landmarkId], references: [id], onDelete: Cascade)
+  id         String    @id @default(uuid())
+  comment    String
+  rating     Int
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  profile    Profile   @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
+  profileId  String
+  landmark   Landmark  @relation(fields: [landmarkId], references: [id], onDelete: Cascade)
   landmarkId String
+  parentId   String?
+  parent     Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies    Comment[] @relation("CommentReplies")
 
-  parentId String?
-  parent   Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
-  replies  Comment[] @relation("CommentReplies")
+  @@index([landmarkId, createdAt(sort: Desc)])
+  @@index([parentId])
 }
 
 model Conversation {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  userAId   String
+  userBId   String
+  userA     Profile   @relation("ConversationUserA", fields: [userAId], references: [clerkId])
+  userB     Profile   @relation("ConversationUserB", fields: [userBId], references: [clerkId])
+  messages  Message[]
 
-  // คู่สนทนา (user A กับ user B)
-  userAId String
-  userBId String
-
-  messages Message[]
-
-  @@unique([userAId, userBId]) // 1 คู่มีได้แค่ 1 conversation
+  @@unique([userAId, userBId])
   @@index([userAId])
   @@index([userBId])
 }
@@ -95,10 +96,12 @@ model Message {
   id             String       @id @default(uuid())
   content        String
   createdAt      DateTime     @default(now())
-  senderId       String // clerkId ของคนส่ง
+  senderId       String
   conversationId String
   isRead         Boolean      @default(false)
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender         Profile      @relation("MessageSender", fields: [senderId], references: [clerkId])
 
   @@index([conversationId, createdAt])
+  @@index([senderId])
 }

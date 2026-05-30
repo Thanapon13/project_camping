@@ -1,7 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import Landmarklist from "./Landmarklist";
 import LandmarkHeader from "./LandmarkHeader";
-import CategoryFilter from "./CategoryFilter";
 import { fetchLandmarks } from "@/actions/landmark";
 
 const LandmarkContainer = async () => {
@@ -11,9 +10,12 @@ const LandmarkContainer = async () => {
   return (
     <section className="py-16 lg:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <CategoryFilter />
         <LandmarkHeader userId={userId} />
-        <Landmarklist initialLandmarks={initialLandmarks} userId={userId} />
+        <Landmarklist
+          initialLandmarks={initialLandmarks}
+          userId={userId}
+          infiniteScroll={false}
+        />
       </div>
     </section>
   );

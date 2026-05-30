@@ -124,12 +124,19 @@ export const fetchLandmarks = async ({
   page = 1,
   limit = 8,
   userId = null,
-}: { page?: number; limit?: number; userId?: string | null } = {}) => {
+  category = "all",
+}: {
+  page?: number;
+  limit?: number;
+  userId?: string | null;
+  category?: string;
+} = {}) => {
   const skip = (page - 1) * limit;
 
   const landmarks = await db.landmark.findMany({
     skip,
     take: limit,
+    where: category !== "all" ? { category } : undefined,
     select: {
       id: true,
       name: true,

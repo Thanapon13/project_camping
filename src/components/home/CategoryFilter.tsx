@@ -2,14 +2,21 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { LayoutGrid } from "lucide-react";
 import { categories } from "@/utils/category";
 
 interface CategoryFilterProps {
   onCategoryChange?: (category: string) => void;
 }
 
+const allCategories = [
+  { id: "all", label: "All", icon: LayoutGrid },
+  ...categories,
+];
+
 const CategoryFilter = ({ onCategoryChange }: CategoryFilterProps) => {
   const [activeCategory, setActiveCategory] = useState("all");
+  console.log("activeCategory", activeCategory);
 
   const handleCategoryClick = (categoryId: string) => {
     setActiveCategory(categoryId);
@@ -20,7 +27,7 @@ const CategoryFilter = ({ onCategoryChange }: CategoryFilterProps) => {
     <section className="py-8 border-b border-border/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
-          {categories.map(category => {
+          {allCategories.map(category => {
             const Icon = category.icon;
             const isActive = activeCategory === category.id;
 

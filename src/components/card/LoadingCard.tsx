@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-const SkeletonCard = () => {
+export const SkeletonCard = () => {
   return (
     <div className="rounded-2xl bg-card border border-border/50 shadow-sm">
       <div className="relative aspect-[4/3] rounded-t-2xl overflow-hidden">

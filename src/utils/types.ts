@@ -1,4 +1,5 @@
 import { LucideIcon } from "lucide-react";
+import { number } from "zod";
 
 export type actionFunction = (
   prevSate: any,
@@ -21,6 +22,9 @@ export type LandmarkCardProps = {
   province: string;
   profileId: string;
   favoriteId: string | null;
+  price?: number;
+  lat?: number;
+  lng?: number;
 };
 
 export type ReplyProps = {

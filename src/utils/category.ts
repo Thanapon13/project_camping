@@ -6,11 +6,9 @@ import {
   Utensils,
   Hotel,
   Bed,
-  Star,
 } from "lucide-react";
 
 export const categories = [
-  { id: "all", label: "All", icon: Star },
   {
     id: "camping",
     label: "camping",

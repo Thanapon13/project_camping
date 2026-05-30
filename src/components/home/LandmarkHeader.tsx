@@ -1,10 +1,10 @@
-// components/home/LandmarkHeader.tsx
 "use client";
 
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Plus } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import LandmarkModal from "../landmark/LandmarkModal";
+import Link from "next/link";
 
 const LandmarkHeader = ({ userId }: { userId: String | null }) => {
   return (
@@ -27,9 +27,11 @@ const LandmarkHeader = ({ userId }: { userId: String | null }) => {
       <div className="flex items-center gap-3">
         <LandmarkModal userId={userId} />
 
-        <Button variant="ghost" className="gap-2 group">
-          View all
-          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+        <Button variant="ghost" className="gap-2 group" asChild>
+          <Link href="/landmarks">
+            View all
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
         </Button>
       </div>
     </motion.div>
