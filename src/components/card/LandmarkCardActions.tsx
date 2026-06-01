@@ -32,7 +32,7 @@ const LandmarkCardActions = ({
     <>
       <div
         onClick={onClick}
-        className="absolute top-3 right-12 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+        className="absolute top-3 right-12 flex gap-1.5 opacity-0 group-hover:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity duration-200"
       >
         <LandmarkCardButtonActions
           title="Edit Landmark"
