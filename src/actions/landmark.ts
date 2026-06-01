@@ -172,14 +172,49 @@ export const fetchLandmarks = async ({
   limit = 8,
   userId = null,
   category = "all",
+  search = "",
+  province = "",
 }: {
   page?: number;
   limit?: number;
   userId?: string | null;
   category?: string;
+  search?: string;
+  province?: string;
 } = {}) => {
-  // Landmark list is cached (user-independent)
-  const landmarks = await fetchLandmarksDB(page, limit, category);
+  const skip = (page - 1) * limit;
+  const hasSearch = search.trim() !== "" || province.trim() !== "";
+
+  // ถ้าไม่มี search → ใช้ cache | ถ้ามี search → query ตรงจาก DB
+  let landmarks;
+  if (!hasSearch) {
+    landmarks = await fetchLandmarksDB(page, limit, category);
+  } else {
+    landmarks = await db.landmark.findMany({
+      skip,
+      take: limit,
+      where: {
+        ...(category !== "all" ? { category } : {}),
+        ...(search.trim()
+          ? { name: { contains: search.trim(), mode: "insensitive" } }
+          : {}),
+        ...(province.trim()
+          ? { province: { contains: province.trim(), mode: "insensitive" } }
+          : {}),
+      },
+      select: {
+        id: true,
+        name: true,
+        image: true,
+        description: true,
+        province: true,
+        category: true,
+        profileId: true,
+        price: true,
+      },
+      orderBy: { updatedAt: "desc" },
+    });
+  }
 
   if (!userId) {
     return landmarks.map(l => ({ ...l, favoriteId: null }));

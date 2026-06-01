@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { fetchLandmarks } from "@/actions/landmark";
-import Landmarklist from "@/components/home/Landmarklist";
+import LandmarkSearchContainer from "@/components/home/LandmarkSearchContainer";
 import CreateLandmarkModal from "@/components/landmark/CreateLandmarkModal";
 import ScrollToTop from "@/components/ui/ScrollToTop";
 
@@ -23,7 +23,7 @@ const LandmarksPage = async () => {
           <CreateLandmarkModal userId={userId} />
         </div>
 
-        <Landmarklist initialLandmarks={initialLandmarks} userId={userId} />
+        <LandmarkSearchContainer initialLandmarks={initialLandmarks} userId={userId} />
       </div>
 
       <ScrollToTop />

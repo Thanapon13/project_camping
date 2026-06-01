@@ -1,9 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Search, MapPin, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Sparkles } from "lucide-react";
 
 const HeroSection = () => {
   return (
@@ -49,34 +47,6 @@ const HeroSection = () => {
             Discover breathtaking destinations, from ancient temples to stunning
             beaches. Plan your perfect adventure across Thailand.
           </motion.p>
-
-          {/* Search Bar */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="mt-10 max-w-2xl mx-auto"
-          >
-            <div className="flex flex-col sm:flex-row gap-3 p-3 rounded-2xl bg-card border border-border shadow-lg">
-              <div className="flex-1 relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <Input
-                  placeholder="Search landmarks, temples, beaches..."
-                  className="pl-12 h-12 border-0 bg-transparent text-base focus-visible:ring-0"
-                />
-              </div>
-              <div className="flex-1 relative">
-                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <Input
-                  placeholder="Province or location"
-                  className="pl-12 h-12 border-0 bg-transparent text-base focus-visible:ring-0"
-                />
-              </div>
-              <Button size="lg" className="h-12 px-8 rounded-xl">
-                Search
-              </Button>
-            </div>
-          </motion.div>
 
           {/* Stats */}
           <motion.div

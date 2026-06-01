@@ -5,7 +5,7 @@ import { FromPageType, LandmarkCardProps } from "@/utils/types";
 import LandmarkCard from "../card/LandmarkCard";
 import { SkeletonCard } from "../card/LoadingCard";
 import EmptyLandmarks from "../card/Emptylandmarks";
-import { useInfiniteScroll } from "@/hooks/Useinfinitescroll";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import CategoryFilter from "./CategoryFilter";
 
 type LandmarklistProps = {
@@ -13,6 +13,8 @@ type LandmarklistProps = {
   userId: string | null;
   fromPage?: FromPageType;
   infiniteScroll?: boolean;
+  search?: string;
+  province?: string;
 };
 
 const SKELETON_COUNT = 8;
@@ -22,6 +24,8 @@ const Landmarklist = ({
   userId,
   fromPage = "home",
   infiniteScroll = true,
+  search = "",
+  province = "",
 }: LandmarklistProps) => {
   const [category, setCategory] = useState("all");
 
@@ -29,6 +33,8 @@ const Landmarklist = ({
     initialLandmarks,
     userId,
     category,
+    search,
+    province,
   });
 
   return (

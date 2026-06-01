@@ -11,12 +11,16 @@ type UseInfiniteScrollOptions = {
   initialLandmarks: LandmarkCardProps[];
   userId: string | null;
   category?: string;
+  search?: string;
+  province?: string;
 };
 
 export const useInfiniteScroll = ({
   initialLandmarks,
   userId,
   category = "all",
+  search = "",
+  province = "",
 }: UseInfiniteScrollOptions) => {
   const [landmarks, setLandmarks] = useState<LandmarkCardProps[]>(initialLandmarks);
   const [page, setPage] = useState(1);
@@ -30,7 +34,7 @@ export const useInfiniteScroll = ({
     rootMargin: "0px 0px 400px 0px",
   });
 
-  // reset + re-fetch เมื่อ category เปลี่ยน
+  // reset + re-fetch เมื่อ filter เปลี่ยน
   useEffect(() => {
     let cancelled = false;
 
@@ -42,7 +46,14 @@ export const useInfiniteScroll = ({
       setHasMore(false);
 
       try {
-        const result = await fetchLandmarks({ page: 1, limit: LIMIT, userId, category });
+        const result = await fetchLandmarks({
+          page: 1,
+          limit: LIMIT,
+          userId,
+          category,
+          search,
+          province,
+        });
         if (!cancelled) {
           setLandmarks(result);
           setHasMore(result.length === LIMIT);
@@ -60,7 +71,7 @@ export const useInfiniteScroll = ({
     refetch();
 
     return () => { cancelled = true; };
-  }, [category, userId]);
+  }, [category, userId, search, province]);
 
   // load more เมื่อ scroll ถึงด้านล่าง
   useEffect(() => {
@@ -73,7 +84,14 @@ export const useInfiniteScroll = ({
       const nextPage = page + 1;
 
       try {
-        const next = await fetchLandmarks({ page: nextPage, limit: LIMIT, userId, category });
+        const next = await fetchLandmarks({
+          page: nextPage,
+          limit: LIMIT,
+          userId,
+          category,
+          search,
+          province,
+        });
         if (next.length < LIMIT) setHasMore(false);
         setLandmarks(prev => [...prev, ...next]);
         setPage(nextPage);
@@ -86,7 +104,7 @@ export const useInfiniteScroll = ({
     };
 
     loadMore();
-  }, [inView, hasMore, page, userId, category]);
+  }, [inView, hasMore, page, userId, category, search, province]);
 
   return { landmarks, hasMore, isLoading, loaderRef: ref };
 };
