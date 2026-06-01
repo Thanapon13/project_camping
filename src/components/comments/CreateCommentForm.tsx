@@ -6,7 +6,7 @@ import FormContainer from "../form/FormContainer";
 import { createCommentAction } from "@/actions/comment";
 import TextAreaInput from "../form/TextAreaInput";
 import { SubmitButton } from "../buttons/Buttons";
-import Avatar from "@/user/Avatar";
+import Avatar from "@/components/user/Avatar";
 
 interface CreateCommentFormProps {
   landmarkId: string;

@@ -5,7 +5,7 @@ import { useState } from "react";
 import FormContainer from "../form/FormContainer";
 import { createReplyAction } from "@/actions/comment";
 import { SubmitButton } from "../buttons/Buttons";
-import Avatar from "@/user/Avatar";
+import Avatar from "@/components/user/Avatar";
 
 const ReplyForm = ({
   commentId,

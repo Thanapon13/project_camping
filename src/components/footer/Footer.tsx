@@ -3,22 +3,22 @@ import { MapPin, Mail, Phone } from "lucide-react";
 
 const footerLinks = {
   explore: [
-    { label: "All Landmarks", href: "/" },
-    { label: "Popular Destinations", href: "/popular" },
-    { label: "Nearby Places", href: "/nearby" },
-    { label: "Categories", href: "/categories" },
+    { label: "All Landmarks", href: "/landmark" },
+    { label: "Popular Destinations", href: "" },
+    { label: "Nearby Places", href: "" },
+    { label: "Categories", href: "" },
   ],
   company: [
-    { label: "About Us", href: "/about" },
-    { label: "Careers", href: "/careers" },
-    { label: "Blog", href: "/blog" },
-    { label: "Press", href: "/press" },
+    { label: "About Us", href: "" },
+    { label: "Careers", href: "" },
+    { label: "Blog", href: "" },
+    { label: "Press", href: "" },
   ],
   support: [
-    { label: "Help Center", href: "/help" },
-    { label: "Contact Us", href: "/contact" },
-    { label: "Privacy Policy", href: "/privacy" },
-    { label: "Terms of Service", href: "/terms" },
+    { label: "Help Center", href: "" },
+    { label: "Contact Us", href: "" },
+    { label: "Privacy Policy", href: "" },
+    { label: "Terms of Service", href: "" },
   ],
 };
 
@@ -43,11 +43,11 @@ const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-center gap-3 text-muted-foreground">
                 <Mail className="w-4 h-4" />
-                <span className="text-sm">hello@landmark.app</span>
+                <span className="text-sm">thanapon.dev.work@gmail.com</span>
               </div>
               <div className="flex items-center gap-3 text-muted-foreground">
                 <Phone className="w-4 h-4" />
-                <span className="text-sm">+66 2 123 4567</span>
+                <span className="text-sm">069-483-9598</span>
               </div>
             </div>
           </div>
@@ -103,30 +103,10 @@ const Footer = () => {
         </div>
 
         {/* Bottom Footer */}
-        <div className="py-6 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="py-6 border-t border-border/50">
           <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} Landmark Explorer. All rights reserved.
           </p>
-          <div className="flex items-center gap-4">
-            <Link
-              href="#"
-              className="w-9 h-9 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
-            >
-              <Phone className="w-4 h-4" />
-            </Link>
-            <Link
-              href="#"
-              className="w-9 h-9 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
-            >
-              <Phone className="w-4 h-4" />
-            </Link>
-            <Link
-              href="#"
-              className="w-9 h-9 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
-            >
-              <Phone className="w-4 h-4" />
-            </Link>
-          </div>
         </div>
       </div>
     </footer>

@@ -28,7 +28,7 @@ const LandmarkHeader = ({ userId }: { userId: String | null }) => {
         <CreateLandmarkModal userId={userId} />
 
         <Button variant="ghost" className="gap-2 group" asChild>
-          <Link href="/landmarks">
+          <Link href="/landmark">
             View all
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>

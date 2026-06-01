@@ -12,7 +12,7 @@ import links from "@/utils/links";
 import { Button } from "../ui/button";
 import SignOutLinks from "./SignOutLinks";
 import { Show, SignInButton, SignUpButton } from "@clerk/nextjs";
-import Avatar from "@/user/Avatar";
+import Avatar from "@/components/user/Avatar";
 
 type DropdownListMenuProps = {
   userImage: string | null;

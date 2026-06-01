@@ -6,7 +6,7 @@ import { CommentProps } from "@/utils/types";
 import ReplyForm from "./ReplyForm";
 import ReplyList from "./ReplyList";
 import { CommentButtonAction } from "./CommentButtonAction";
-import Avatar from "@/user/Avatar";
+import Avatar from "@/components/user/Avatar";
 import EditCommentForm from "./EditCommentForm";
 import { deleteCommentAction, editCommentAction } from "@/actions/comment";
 import CommentInteractions from "./CommentInteractions";

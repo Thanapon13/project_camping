@@ -1,9 +1,10 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -13,7 +14,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Pencil } from "lucide-react";
 import { updateProfileAction } from "@/actions/profile";
-import { useFormNotification } from "@/hooks/useformnotification";
+import FormContainer from "@/components/form/FormContainer";
+import { SubmitButton } from "@/components/buttons/Buttons";
 
 type Profile = {
   firstName: string;
@@ -23,14 +25,6 @@ type Profile = {
 
 const EditProfileDialog = ({ profile }: { profile: Profile }) => {
   const [open, setOpen] = useState(false);
-  const [state, formAction, pending] = useActionState(updateProfileAction, {
-    message: "",
-    code: 0,
-  });
-
-  useFormNotification(state, {
-    onSuccess: () => setOpen(false),
-  });
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -44,12 +38,20 @@ const EditProfileDialog = ({ profile }: { profile: Profile }) => {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Edit Profile</DialogTitle>
+          <DialogDescription className="sr-only">
+            Edit your profile information
+          </DialogDescription>
         </DialogHeader>
 
-        <form action={formAction} className="space-y-4 pt-2">
+        <FormContainer
+          action={updateProfileAction}
+          onSuccess={() => setOpen(false)}
+          className="space-y-4 pt-2"
+        >
           <div className="space-y-1.5">
             <Label htmlFor="firstName">First Name</Label>
             <Input
+              key={profile.firstName}
               id="firstName"
               name="firstName"
               defaultValue={profile.firstName}
@@ -60,6 +62,7 @@ const EditProfileDialog = ({ profile }: { profile: Profile }) => {
           <div className="space-y-1.5">
             <Label htmlFor="lastName">Last Name</Label>
             <Input
+              key={profile.lastName}
               id="lastName"
               name="lastName"
               defaultValue={profile.lastName}
@@ -70,6 +73,7 @@ const EditProfileDialog = ({ profile }: { profile: Profile }) => {
           <div className="space-y-1.5">
             <Label htmlFor="userName">Username</Label>
             <Input
+              key={profile.userName}
               id="userName"
               name="userName"
               defaultValue={profile.userName}
@@ -78,18 +82,12 @@ const EditProfileDialog = ({ profile }: { profile: Profile }) => {
           </div>
 
           <div className="flex justify-end gap-2 pt-2">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => setOpen(false)}
-            >
+            <Button type="button" variant="ghost" onClick={() => setOpen(false)}>
               Cancel
             </Button>
-            <Button type="submit" disabled={pending}>
-              {pending ? "Saving..." : "Save"}
-            </Button>
+            <SubmitButton text="Save" size="sm" pendingText="Saving..." />
           </div>
-        </form>
+        </FormContainer>
       </DialogContent>
     </Dialog>
   );

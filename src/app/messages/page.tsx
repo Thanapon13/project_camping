@@ -1,7 +1,9 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { fetchMyConversations } from "@/actions/messages";
-import MessagesClient, { ConversationItem } from "@/components/messages/MessagesClient";
+import MessagesClient, {
+  ConversationItem,
+} from "@/components/messages/MessagesClient";
 
 const MessagesPage = async () => {
   const user = await currentUser();
@@ -28,7 +30,13 @@ const MessagesPage = async () => {
     };
   });
 
-  return <MessagesClient conversations={conversations} currentUserId={user.id} />;
+  return (
+    <main className="min-h-screen bg-background">
+      <div className="container max-w-7xl sm:px-6 lg:px-8 py-24">
+        <MessagesClient conversations={conversations} currentUserId={user.id} />
+      </div>
+    </main>
+  );
 };
 
 export default MessagesPage;
