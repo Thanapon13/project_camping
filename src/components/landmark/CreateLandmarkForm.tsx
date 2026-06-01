@@ -20,7 +20,11 @@ interface CreateLandmarkFormProps {
   pathname?: string;
 }
 
-const CreateLandmarkForm = ({ onSuccess, value, pathname }: CreateLandmarkFormProps) => {
+const CreateLandmarkForm = ({
+  onSuccess,
+  value,
+  pathname,
+}: CreateLandmarkFormProps) => {
   const [formData, setFormData] = useState({
     name: value?.name ?? "",
     description: value?.description ?? "",

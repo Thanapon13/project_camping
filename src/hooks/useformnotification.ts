@@ -16,8 +16,8 @@ type UseFormNotificationOptions = {
 /**
  * Handle form action response notifications.
  *
- * code === 0   → SweetAlert success popup → then call onSuccess()
- * code === 200 → Silent success           → call onSuccess() immediately
+ * code === 0   → close modal immediately, then show SweetAlert success popup
+ * code === 200 → silent success — call onSuccess() immediately
  * code === 402 → Toast error
  */
 export const useFormNotification = (
@@ -31,8 +31,9 @@ export const useFormNotification = (
     if (!state.message) return;
 
     if (state.code === 0) {
+      onSuccessRef.current?.();
       Swal.fire({
-        title: "สำเร็จ!",
+        title: "succeed!",
         text: state.message,
         icon: "success",
         timer: 2000,
@@ -40,7 +41,7 @@ export const useFormNotification = (
         width: "600px",
         padding: "3em",
         timerProgressBar: true,
-      }).then(() => onSuccessRef.current?.());
+      });
       return;
     }
 
