@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import LandmarkModal from "../landmark/LandmarkModal";
+import CreateLandmarkModal from "../landmark/CreateLandmarkModal";
 import Link from "next/link";
 
 const LandmarkHeader = ({ userId }: { userId: String | null }) => {
@@ -25,7 +25,7 @@ const LandmarkHeader = ({ userId }: { userId: String | null }) => {
       </div>
 
       <div className="flex items-center gap-3">
-        <LandmarkModal userId={userId} />
+        <CreateLandmarkModal userId={userId} />
 
         <Button variant="ghost" className="gap-2 group" asChild>
           <Link href="/landmarks">

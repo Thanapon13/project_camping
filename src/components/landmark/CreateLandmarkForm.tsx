@@ -17,9 +17,10 @@ import { createLandmarkAction, editLandmarkAction } from "@/actions/landmark";
 interface CreateLandmarkFormProps {
   onSuccess?: () => void;
   value?: LandmarkCardProps;
+  pathname?: string;
 }
 
-const CreateLandmarkForm = ({ onSuccess, value }: CreateLandmarkFormProps) => {
+const CreateLandmarkForm = ({ onSuccess, value, pathname }: CreateLandmarkFormProps) => {
   const [formData, setFormData] = useState({
     name: value?.name ?? "",
     description: value?.description ?? "",
@@ -79,6 +80,7 @@ const CreateLandmarkForm = ({ onSuccess, value }: CreateLandmarkFormProps) => {
       result = await createLandmarkAction(prevState, formDataPayload);
     } else {
       formDataPayload.set("id", value.id);
+      if (pathname) formDataPayload.set("pathname", pathname);
       result = await editLandmarkAction(prevState, formDataPayload);
     }
 

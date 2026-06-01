@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { fetchLandmarks } from "@/actions/landmark";
 import Landmarklist from "@/components/home/Landmarklist";
-import LandmarkModal from "@/components/landmark/LandmarkModal";
+import CreateLandmarkModal from "@/components/landmark/CreateLandmarkModal";
 import ScrollToTop from "@/components/ui/ScrollToTop";
 
 const LandmarksPage = async () => {
@@ -20,7 +20,7 @@ const LandmarksPage = async () => {
               Discover amazing places across Thailand
             </p>
           </div>
-          <LandmarkModal userId={userId} />
+          <CreateLandmarkModal userId={userId} />
         </div>
 
         <Landmarklist initialLandmarks={initialLandmarks} userId={userId} />

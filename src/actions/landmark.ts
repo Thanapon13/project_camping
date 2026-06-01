@@ -95,10 +95,15 @@ export const editLandmarkAction = async (
   try {
     const user = await getAuthUser();
     const id = formData.get("id") as string;
+    const pathname = formData.get("pathname") as string | null;
 
     const rawData = Object.fromEntries(
       Array.from(formData.entries()).filter(
-        ([key]) => !key.startsWith("$") && key !== "id" && key !== "image",
+        ([key]) =>
+          !key.startsWith("$") &&
+          key !== "id" &&
+          key !== "image" &&
+          key !== "pathname",
       ),
     );
 
@@ -123,6 +128,7 @@ export const editLandmarkAction = async (
     revalidateTag("landmarks", "default");
     revalidatePath("/");
     revalidatePath(`/landmark/${id}`);
+    if (pathname && pathname !== "/") revalidatePath(pathname);
     return { code: 0, message: "Update Landmark Success!!!" };
   } catch (error) {
     return renderError(error, 402);
@@ -136,6 +142,7 @@ export const deleteLandmarkAction = async (
   try {
     const user = await getAuthUser();
     const id = formData.get("id") as string;
+    const pathname = formData.get("pathname") as string | null;
 
     if (!id) {
       throw new Error("No landmark ID information was found.");
@@ -147,6 +154,7 @@ export const deleteLandmarkAction = async (
 
     revalidateTag("landmarks", "default");
     revalidatePath("/");
+    if (pathname && pathname !== "/") revalidatePath(pathname);
 
     return {
       code: 200,

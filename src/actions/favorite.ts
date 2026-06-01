@@ -26,6 +26,7 @@ export const toggleFavoriteAction = async (prevState: {
 
     revalidateTag(`favorites-${user.id}`, "default");
     revalidatePath(pathname);
+    revalidatePath("/favorits");
     return {
       code: 200,
       message: isValidId ? "Removed Favorite Success" : "Add Favorite Success",
@@ -75,7 +76,14 @@ async function fetchFavoritsDB(userId: string) {
           },
         },
       });
-      return favorites.map(f => ({ ...f.landmark, favoriteId: f.id }));
+      const seen = new Set<string>();
+      return favorites
+        .filter(f => {
+          if (seen.has(f.landmark.id)) return false;
+          seen.add(f.landmark.id);
+          return true;
+        })
+        .map(f => ({ ...f.landmark, favoriteId: f.id }));
     },
     [`favorites-${userId}`],
     { tags: [`favorites-${userId}`], revalidate: false },

@@ -3,6 +3,7 @@ import { Mail, MapPin } from "lucide-react";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { fetchProfile, fetchUserLandmarks } from "@/actions/profile";
+import { fetchFavorits } from "@/actions/favorite";
 import EditProfileDialog from "@/components/profile/EditProfileDialog";
 import LandmarkCard from "@/components/card/LandmarkCard";
 
@@ -10,10 +11,13 @@ const ProfilePage = async () => {
   const user = await currentUser();
   if (!user) redirect("/");
 
-  const [profile, landmarks] = await Promise.all([
+  const [profile, landmarks, favorites] = await Promise.all([
     fetchProfile(),
     fetchUserLandmarks(),
+    fetchFavorits(),
   ]);
+
+  const favoriteMap = new Map(favorites.map(f => [f.id, f.favoriteId]));
 
   return (
     <section className="min-h-screen bg-background">
@@ -97,10 +101,10 @@ const ProfilePage = async () => {
                     category: landmark.category,
                     province: landmark.province,
                     profileId: landmark.profileId,
-                    favoriteId: null,
+                    favoriteId: favoriteMap.get(landmark.id) ?? null,
                   }}
                   userId={user.id}
-                  favoriteId={null}
+                  favoriteId={favoriteMap.get(landmark.id) ?? null}
                   fromPage="profile"
                   index={index}
                 />

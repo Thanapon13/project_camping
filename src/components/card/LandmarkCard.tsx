@@ -50,6 +50,7 @@ const LandmarkCard = ({
             favoriteId={favoriteId}
             userId={userId}
           />
+
           {userId === profileId && <LandmarkCardActions landmark={landmark} />}
         </div>
       </div>

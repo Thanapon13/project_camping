@@ -9,6 +9,7 @@ interface DeleteConfirmationFormProps {
   name?: string;
   description?: string;
   action: (prevState: any, formData: FormData) => Promise<any>;
+  pathname?: string;
   onSuccess: () => void;
   onCancel: () => void;
 }
@@ -18,6 +19,7 @@ const DeleteConfirmationForm = ({
   name,
   description = "การกระทำนี้ไม่สามารถย้อนกลับได้",
   action,
+  pathname,
   onSuccess,
   onCancel,
 }: DeleteConfirmationFormProps) => {
@@ -31,8 +33,8 @@ const DeleteConfirmationForm = ({
 
   return (
     <FormContainer action={handleSubmitWithClose}>
-      {/* ส่ง ID ไปฝั่ง Server Action */}
       <input type="hidden" name="id" value={id} />
+      {pathname && <input type="hidden" name="pathname" value={pathname} />}
 
       <div className="space-y-4 py-2">
         <p className="text-sm text-muted-foreground leading-relaxed">
