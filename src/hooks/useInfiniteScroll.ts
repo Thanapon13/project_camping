@@ -34,6 +34,13 @@ export const useInfiniteScroll = ({
     rootMargin: "0px 0px 400px 0px",
   });
 
+  // sync ข้อมูลใหม่จาก server (เช่นหลัง revalidatePath) โดยไม่ remount component
+  useEffect(() => {
+    setLandmarks(initialLandmarks);
+    setPage(1);
+    setHasMore(initialLandmarks.length === LIMIT);
+  }, [initialLandmarks]);
+
   // reset + re-fetch เมื่อ filter เปลี่ยน
   useEffect(() => {
     let cancelled = false;

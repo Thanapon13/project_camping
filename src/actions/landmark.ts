@@ -126,9 +126,8 @@ export const editLandmarkAction = async (
     });
 
     revalidateTag("landmarks", "default");
-    revalidatePath("/");
     revalidatePath(`/landmark/${id}`);
-    if (pathname && pathname !== "/") revalidatePath(pathname);
+    if (pathname) revalidatePath(pathname);
     return { code: 0, message: "Update Landmark Success!!!" };
   } catch (error) {
     return renderError(error, 402);
