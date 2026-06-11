@@ -142,6 +142,14 @@ pnpm run dev
 4. อัปเดต Zod schema, types และโค้ดส่วนที่ใช้งาน field/relation ที่เปลี่ยนแปลง ให้ตรงกับ schema ใหม่
 5. รัน `pnpm exec prisma generate` หากต้องการ regenerate client โดยไม่รัน migration (เช่น แก้แค่ `output` path หรือ generator config)
 
+### ขั้นตอนลบ Model ที่ไม่ใช้แล้ว
+
+1. ลบ `model` ที่ต้องการออกจาก `prisma/schema.prisma` พร้อมทั้งลบ field/relation ใน model อื่นที่อ้างอิงถึง model นี้ (เช่น `@relation`, foreign key fields)
+2. รัน `pnpm exec prisma migrate dev --name <ชื่อ-migration>` เพื่อสร้าง migration ที่ `DROP TABLE` และ apply ไปยัง Supabase
+3. ตรวจสอบไฟล์ migration ที่ถูกสร้างก่อน apply จริง เพราะการ `DROP TABLE` จะ**ลบข้อมูลทั้งหมด**ใน table นั้นแบบกู้คืนไม่ได้
+4. ลบโค้ดส่วนที่ใช้งาน model นี้ออกทั้งหมด เช่น Zod schema, types ใน `src/utils/types.ts`, server actions, components ที่เกี่ยวข้อง
+5. ตรวจสอบใน Supabase Dashboard ว่า table ถูกลบเรียบร้อย
+
 ### คำสั่งที่ใช้บ่อย
 
 | คำสั่ง | ใช้เมื่อ |
