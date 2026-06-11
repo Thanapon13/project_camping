@@ -1,0 +1,16 @@
+services:
+  camping_db:
+    image: postgres:17-alpine
+    container_name: camping_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: camping_dev
+    ports:
+      - "5433:5432"
+    volumes:
+      - camping_db_data:/var/lib/postgresql/data
+
+volumes:
+  camping_db_data:

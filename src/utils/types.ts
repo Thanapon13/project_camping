@@ -52,7 +52,7 @@ export type CommentProps = {
     lastName: string;
     profileImage: string;
   };
-  replies: ReplyProps[]; // ← เพิ่มตรงนี้
+  replies: ReplyProps[];
 };
 
 export type FromPageType = "home" | "favorites" | "profile";

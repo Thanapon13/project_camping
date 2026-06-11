@@ -2,8 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { ArrowRight, TrendingUp, Clock, MapPin } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { TrendingUp, Clock, MapPin } from "lucide-react";
 
 const featuredLandmarks = [
   {
