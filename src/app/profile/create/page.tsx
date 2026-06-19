@@ -22,6 +22,7 @@ const CreateProfile = async () => {
       userName,
       email: user.emailAddresses[0]?.emailAddress ?? "",
       profileImage: user.imageUrl,
+      isAdmin: false,
     },
   });
 

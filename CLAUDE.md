@@ -21,11 +21,13 @@
 
 # Coding Rules
 
+- ทำให้เป็น Server Component ให้มากที่สุด และ  ใช้ use client ในส่วนที่จำเป้นเท่านั้น
 - ใช้ **TypeScript** ทุกไฟล์ และระบุ Type ให้ชัดเจน **หลีกเลี่ยงการใช้ `any`**
 - แยก Components ให้เป็นชิ้นเล็ก เล็ก เล็ก และอ่านง่าย (Clean Code)
 - การทำ Form Validation หรือ API Validation ต้องใช้ **Zod** เสมอ
 - ห้ามลบหรือแก้ไขโค้ดเดิมในส่วนที่ไม่มั่นใจ ถ้าไม่เข้าใจหน้าที่ของมันให้ถามก่อน
 - รองรับ Responsive Design (Mobile-First) เสมอด้วย Tailwind CSS
+- คิดถึง Cache ว่าเว็บเรา Update บ่อยไหม , Data ส่วนไหนต้อง Realtime
 
 # Commands
 

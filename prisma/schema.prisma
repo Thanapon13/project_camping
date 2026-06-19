@@ -15,6 +15,7 @@ model Profile {
   userName         String
   email            String
   profileImage     String
+  isAdmin          Boolean        @default(false)
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
   landmarks        Landmark[]
