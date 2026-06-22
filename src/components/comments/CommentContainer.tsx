@@ -1,11 +1,9 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { MessageCircle } from "lucide-react";
 import CreateCommentForm from "../comments/CreateCommentForm";
 import CommentList from "../comments/CommentList";
 import { CommentProps } from "@/utils/types";
 import { SignInTextButton } from "../buttons/Buttons";
+import MotionDiv from "@/components/motion/MotionDiv";
 
 // --- Sub-components ---
 
@@ -44,7 +42,7 @@ const CommentContainer = ({
   userImage,
 }: CommentContainerProps) => {
   return (
-    <motion.div
+    <MotionDiv
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.45 }}
@@ -64,7 +62,7 @@ const CommentContainer = ({
       )}
 
       <CommentList comments={comments} userId={userId} userImage={userImage} />
-    </motion.div>
+    </MotionDiv>
   );
 };
 

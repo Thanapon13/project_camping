@@ -1,10 +1,8 @@
-"use client";
-
-import { motion } from "framer-motion";
+import MotionDiv from "@/components/motion/MotionDiv";
 
 const EmptyLandmarks = () => {
   return (
-    <motion.div
+    <MotionDiv
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className="flex flex-col items-center justify-center py-20 text-center"
@@ -38,7 +36,7 @@ const EmptyLandmarks = () => {
         Be the first to add a landmark and share your favorite places with the
         community.
       </p>
-    </motion.div>
+    </MotionDiv>
   );
 };
 

@@ -1,8 +1,6 @@
-"use client";
-
-import { motion } from "framer-motion";
 import Image from "next/image";
 import { TrendingUp, Clock, MapPin } from "lucide-react";
+import MotionDiv from "@/components/motion/MotionDiv";
 
 const featuredLandmarks = [
   {
@@ -39,7 +37,7 @@ const FeaturedSection = () => {
     <section className="py-16 lg:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <motion.div
+        <MotionDiv
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -54,12 +52,12 @@ const FeaturedSection = () => {
               Most popular landmarks loved by travelers
             </p>
           </div>
-        </motion.div>
+        </MotionDiv>
 
         {/* Featured Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Main Featured Card */}
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -100,11 +98,11 @@ const FeaturedSection = () => {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </MotionDiv>
 
           {/* Secondary Featured Cards */}
           {featuredLandmarks.slice(1).map((landmark, index) => (
-            <motion.div
+            <MotionDiv
               key={landmark.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -144,7 +142,7 @@ const FeaturedSection = () => {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </MotionDiv>
           ))}
         </div>
       </div>

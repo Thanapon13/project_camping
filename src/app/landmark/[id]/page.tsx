@@ -22,6 +22,7 @@ const LandmarkDetailPage = async ({
 }) => {
   const { userId } = await auth();
   const { id } = await params;
+
   const resolvedSearchParams = await searchParams;
 
   const [landmark, favoriteId] = await Promise.all([

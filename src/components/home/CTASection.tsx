@@ -1,15 +1,13 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { ArrowRight, MapPin, Compass } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import MotionDiv from "@/components/motion/MotionDiv";
 
 const CTASection = () => {
   return (
     <section className="py-16 lg:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
+        <MotionDiv
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -86,7 +84,7 @@ const CTASection = () => {
               </p>
             </div>
           </div>
-        </motion.div>
+        </MotionDiv>
       </div>
     </section>
   );

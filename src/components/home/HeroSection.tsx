@@ -1,7 +1,7 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
+import MotionDiv from "@/components/motion/MotionDiv";
+import MotionH1 from "@/components/motion/MotionH1";
+import MotionP from "@/components/motion/MotionP";
 
 const HeroSection = () => {
   return (
@@ -16,7 +16,7 @@ const HeroSection = () => {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
         <div className="text-center max-w-4xl mx-auto">
           {/* Badge */}
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -24,10 +24,10 @@ const HeroSection = () => {
           >
             <Sparkles className="w-4 h-4" />
             <span>Discover Thailand&apos;s Hidden Gems</span>
-          </motion.div>
+          </MotionDiv>
 
           {/* Heading */}
-          <motion.h1
+          <MotionH1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
@@ -35,10 +35,10 @@ const HeroSection = () => {
           >
             Explore Amazing
             <span className="block text-primary">Landmarks</span>
-          </motion.h1>
+          </MotionH1>
 
           {/* Subtitle */}
-          <motion.p
+          <MotionP
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -46,10 +46,10 @@ const HeroSection = () => {
           >
             Discover breathtaking destinations, from ancient temples to stunning
             beaches. Plan your perfect adventure across Thailand.
-          </motion.p>
+          </MotionP>
 
           {/* Stats */}
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
@@ -69,7 +69,7 @@ const HeroSection = () => {
                 </div>
               </div>
             ))}
-          </motion.div>
+          </MotionDiv>
         </div>
       </div>
 

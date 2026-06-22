@@ -1,14 +1,12 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import CreateLandmarkModal from "../landmark/CreateLandmarkModal";
 import Link from "next/link";
+import MotionDiv from "@/components/motion/MotionDiv";
 
 const LandmarkHeader = ({ userId }: { userId: String | null }) => {
   return (
-    <motion.div
+    <MotionDiv
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -34,7 +32,7 @@ const LandmarkHeader = ({ userId }: { userId: String | null }) => {
           </Link>
         </Button>
       </div>
-    </motion.div>
+    </MotionDiv>
   );
 };
 

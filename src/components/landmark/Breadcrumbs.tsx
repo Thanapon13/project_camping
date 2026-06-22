@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,8 +7,8 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { Home, MapPin, Heart, User } from "lucide-react";
+import MotionNav from "@/components/motion/MotionNav";
 
 interface BreadcrumbsProps {
   name: string;
@@ -28,7 +26,7 @@ function Breadcrumbs({ name, fromPage }: BreadcrumbsProps) {
     config[fromPage as keyof typeof config] ?? config.home;
 
   return (
-    <motion.nav
+    <MotionNav
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
@@ -58,7 +56,7 @@ function Breadcrumbs({ name, fromPage }: BreadcrumbsProps) {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-    </motion.nav>
+    </MotionNav>
   );
 }
 
