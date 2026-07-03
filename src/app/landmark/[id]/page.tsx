@@ -17,8 +17,8 @@ const LandmarkDetailPage = async ({
   params,
   searchParams,
 }: {
-  params: { id: string };
-  searchParams: { from?: string };
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ from?: string }>;
 }) => {
   const { userId } = await auth();
   const { id } = await params;
